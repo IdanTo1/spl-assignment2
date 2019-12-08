@@ -25,3 +25,4 @@ hs_err_pid*
 # ignore weird mac files, and project files
 *._*
 /.idea
+/target
