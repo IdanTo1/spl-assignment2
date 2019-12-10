@@ -35,21 +35,22 @@ public class MessageBrokerTest {
     public void testEventSubscribe() {
         m.sendEvent(new IntEvent(0));
         m.sendEvent(new IntEvent(1));
-        safeAwaitMessage(true, true);
+        safeAwaitMessage(true);
         assertTrue(s1.getNum() == 0, "Subscriber 1 didn't get the first called event");
         assertTrue(s2.getNum() == 1, "Subscriber 2 didn't get the second called event");
-        safeAwaitMessage(true, false);
+        m.sendEvent(new IntEvent(2));
+        safeAwaitMessage( false);
         assertTrue(s1.getNum() == 2, "Subscriber 1 didn't appear 3rd in a 2 object round-robin");
     }
 
     @Test
     public void testBroadcastSubscribe() {
         m.sendBroadcast(new IntBroadcast(2));
-        safeAwaitMessage(true, true);
+        safeAwaitMessage(true);
         assertTrue(s1.getNum() == 2, "Subscriber s1 didn't get the broadcast");
         assertTrue(s2.getNum() == 2, "Subscriber s2 didn't get the broadcast");
         m.sendBroadcast(new IntBroadcast(3));
-        safeAwaitMessage(true, true);
+        safeAwaitMessage(true);
         assertTrue(s1.getNum() == 3, "Subscriber s1 didn't get the broadcast");
         assertTrue(s2.getNum() == 3, "Subscriber s2 didn't get the broadcast");
     }
@@ -61,6 +62,7 @@ public class MessageBrokerTest {
         assertTrue(!f.isDone(), "Future object starts completed");
         m.complete(e, 2);
         assertTrue(f.isDone(), "Future object doesn't complete");
+        assertTrue(f.get() == 2, "Future doesn't return the result");
     }
 
     @Test
@@ -81,6 +83,7 @@ public class MessageBrokerTest {
             try {
                 m.awaitMessage(s1);
             } catch (InterruptedException e) {
+                assertTrue(true); // For maven test count
                 return;
             }
             fail("didn't get interrupted while in infinite wait");
@@ -89,10 +92,10 @@ public class MessageBrokerTest {
         th.interrupt();
     }
 
-    private void safeAwaitMessage(boolean awaitS1, boolean awaitS2) {
+    private void safeAwaitMessage(boolean twoSubscribers) {
         try {
-            if (awaitS1) m.awaitMessage(s1);
-            if (awaitS2) m.awaitMessage(s2);
+            m.awaitMessage(s1);
+            if (twoSubscribers) m.awaitMessage(s2);
         } catch (InterruptedException e) {
             fail("Got interrupted with only 1 thread");
         }
