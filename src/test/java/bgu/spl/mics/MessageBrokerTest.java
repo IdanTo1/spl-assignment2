@@ -3,6 +3,7 @@ package bgu.spl.mics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class MessageBrokerTest {
@@ -12,8 +13,9 @@ public class MessageBrokerTest {
     }
 
     @Test
-    public void test(){
-        //TODO: change this test and add more tests :)
-        fail("Not a good test");
+    public void testSingleton(){
+        MessageBroker instance1 = MessageBrokerImpl.getInstance();
+        MessageBroker instance2 = MessageBrokerImpl.getInstance();
+        assertTrue(instance1==instance2, "different instances of singleton MessageBroker exist!");
     }
 }
