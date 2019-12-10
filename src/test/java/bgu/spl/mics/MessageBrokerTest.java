@@ -11,12 +11,12 @@ public class MessageBrokerTest {
     TestSubscriber s1;
     TestSubscriber s2;
     MessageBroker m;
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         m = MessageBrokerImpl.getInstance();
         s1 = new TestSubscriber("s1");
         s2 = new TestSubscriber("s2");
-
     }
 
     @AfterEach
@@ -26,9 +26,9 @@ public class MessageBrokerTest {
     }
 
     @Test
-    public void testSingleton(){
+    public void testSingleton() {
         MessageBroker otherInstance = MessageBrokerImpl.getInstance();
-        assertTrue(otherInstance==m, "different instances of singleton MessageBroker exist!");
+        assertTrue(otherInstance == m, "different instances of singleton MessageBroker exist!");
     }
 
     @Test
@@ -67,10 +67,10 @@ public class MessageBrokerTest {
     public void testUnregister() {
         m.unregister(s2);
         Future<Integer> f = m.sendEvent(new IntEvent(1));
-        assertTrue(f!=null, "sendEvent should return future object");
+        assertTrue(f != null, "sendEvent should return future object");
         m.unregister(s1);
         f = m.sendEvent(new IntEvent(1));
-        assertTrue(f==null,
+        assertTrue(f == null,
                 "sendEvent should return null future event when" +
                         " no subscriber is subscribed to messages of certain type");
     }
@@ -80,8 +80,7 @@ public class MessageBrokerTest {
         Thread th = new Thread(() -> {
             try {
                 m.awaitMessage(s1);
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 return;
             }
             fail("didn't get interrupted while in infinite wait");
@@ -92,11 +91,9 @@ public class MessageBrokerTest {
 
     private void safeAwaitMessage(boolean awaitS1, boolean awaitS2) {
         try {
-            if(awaitS1) m.awaitMessage(s1);
-            if(awaitS2) m.awaitMessage(s2);
-        }
-        catch (InterruptedException e)
-        {
+            if (awaitS1) m.awaitMessage(s1);
+            if (awaitS2) m.awaitMessage(s2);
+        } catch (InterruptedException e) {
             fail("Got interrupted with only 1 thread");
         }
     }
