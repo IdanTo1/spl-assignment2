@@ -21,10 +21,10 @@ public class SquadTest {
             new Agent("003", "c"), new Agent("004", "d")};
     public static final ArrayList<String> agentsNames = new ArrayList<>(Arrays.asList("a", "b", "c", "d"));
     public static final ArrayList<String> agentsSerials = new ArrayList<>(Arrays.asList("001", "002", "003", "004"));
-    Squad squad;
+    static Squad squad;
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         squad = Squad.getInstance();
         squad.load(agents);
     }
@@ -49,7 +49,7 @@ public class SquadTest {
     }
 
     @Test
-    public void testGetSetAgents() {
+    public void testGetSendAgents() {
         squad.getAgents(agentsSerials);
         for (Agent agent : agents) {
             assertFalse(agent.isAvailable(), "agent is still available after being acquired");
