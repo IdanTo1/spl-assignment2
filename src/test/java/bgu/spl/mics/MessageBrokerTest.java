@@ -31,6 +31,15 @@ public class MessageBrokerTest {
         assertTrue(otherInstance == m, "different instances of singleton MessageBroker exist!");
     }
 
+    private void safeAwaitMessage(boolean twoSubscribers) {
+        try {
+            m.awaitMessage(s1);
+            if (twoSubscribers) m.awaitMessage(s2);
+        } catch (InterruptedException e) {
+            fail("Got interrupted with only 1 thread");
+        }
+    }
+
     @Test
     public void testEventSubscribe() {
         m.sendEvent(new IntEvent(0));
@@ -41,6 +50,7 @@ public class MessageBrokerTest {
         m.sendEvent(new IntEvent(2));
         safeAwaitMessage( false);
         assertTrue(s1.getNum() == 2, "Subscriber 1 didn't appear 3rd in a 2 object round-robin");
+        assertTrue(s2.getNum() == 1, "Subscriber s2 received an event it shouldn't have");
     }
 
     @Test
@@ -91,15 +101,4 @@ public class MessageBrokerTest {
         th.start();
         th.interrupt();
     }
-
-    private void safeAwaitMessage(boolean twoSubscribers) {
-        try {
-            m.awaitMessage(s1);
-            if (twoSubscribers) m.awaitMessage(s2);
-        } catch (InterruptedException e) {
-            fail("Got interrupted with only 1 thread");
-        }
-    }
-
-
 }
