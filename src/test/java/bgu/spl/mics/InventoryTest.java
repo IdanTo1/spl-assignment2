@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Vector;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InventoryTest {
     public static final String[] TEST_GADGETS= {"gadget1", "gadget2", "gadget3", "gadget4"};
@@ -19,32 +18,18 @@ public class InventoryTest {
     }
 
     @Test
-    public void testSingleTon(){
-        assertTrue(inv != null, "singleTon not created");
+    public void testSingleton(){
+        assertNotNull(inv, "singleton not created");
         Inventory otherInstance = Inventory.getInstance();
-        assertTrue(inv == otherInstance, "different instances of singleton Inventory exist!");
+        assertSame(inv, otherInstance, "different instances of singleton Inventory exist!");
     }
 
     @Test
     public void testLoad(){
         inv.load(TEST_GADGETS);
         for (String gadget: TEST_GADGETS) {
-            assertTrue(inv.getItem(gadget) == true, "item is not in the inventory");
-            assertTrue(inv.getItem(gadget) == false, "item is in the inventory after it was acquired");
-        }
-    }
-
-    @Test
-    public void testPrintToFile(){
-        inv.load(TEST_GADGETS);
-        inv.printToFile(TEST_FILE);
-        for (String gadget: TEST_GADGETS) {
-            inv.getItem(gadget); // flush inventory
-        }
-        String[] tmp = {};
-        inv.load(tmp); //TODO complete read to string array json
-        for (String gadget: TEST_GADGETS) {
-            assertTrue(inv.getItem(gadget) == true, "item is not in the inventory");
+            assertTrue(inv.getItem(gadget), "item is not in the inventory");
+            assertFalse(inv.getItem(gadget), "item is in the inventory after it was acquired");
         }
     }
 }

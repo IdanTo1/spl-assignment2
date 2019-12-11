@@ -30,8 +30,8 @@ public class SquadTest {
     }
 
     @Test
-    public void testSingleTon(){
-        assertNotNull(squad, "singleTon not created");
+    public void testSingleton(){
+        assertNotNull(squad, "singleton not created");
         Squad otherInstance = Squad.getInstance();
         assertSame(squad, otherInstance, "different instances of singleton Squad exist!");
     }
