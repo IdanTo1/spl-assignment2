@@ -20,8 +20,9 @@ public class Squad {
 	 * @post return != null
 	 */
 	public static Squad getInstance() {
-		//TODO: Implement this
-		return null;
+		if (instance == null)
+			instance = new Squad();
+		return instance;
 	}
 
 	private Squad() {

@@ -8,6 +8,9 @@ package bgu.spl.mics.application.passiveObjects;
  */
 public class Agent {
 
+	public Agent(String s, String a) {
+	}
+
 	/**
 	 * Sets the serial number of an agent.
 	 */
