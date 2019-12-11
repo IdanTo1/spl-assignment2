@@ -38,14 +38,7 @@ public class SquadTest {
 
     @Test
     public void testLoad(){
-        ArrayList<String> testSerials = new ArrayList<>();
-        ArrayList<String> testNames = new ArrayList<>();
-        for (Agent agent: agents) {
-            testSerials.add(agent.getSerialNumber());
-            testNames.add(agent.getName());
-        }
-        assertTrue(squad.getAgentsNames(testSerials).equals(agentsNames), "serials in squad doesn't match inserted agents' names");
-        assertTrue(squad.getAgentsNames(agentsSerials).equals(testNames), "names in squad doesn't match inserted agents' serials");
+        assertTrue(squad.getAgentsNames(agentsSerials).equals(agentsNames), "names in squad doesn't match inserted agents' serials");
     }
 
     @Test
