@@ -7,7 +7,7 @@ package bgu.spl.mics;
  * @inv MessageBrokerImpl is a singleton - only one instance of this class can be initialized
  */
 public class MessageBrokerImpl implements MessageBroker {
-	private static MessageBrokerImpl instace = null;
+	private static MessageBrokerImpl instance = null;
 	/**
 	 * Retrieves the single instance of this class.
 	 */

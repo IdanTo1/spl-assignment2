@@ -1,7 +1,7 @@
 package bgu.spl.mics;
 
 public class IntBroadcast implements Broadcast {
-    private int num;
+    private final int num;
 
     public IntBroadcast(int num) {
         this.num = num;

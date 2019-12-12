@@ -4,8 +4,6 @@ import bgu.spl.mics.application.passiveObjects.Inventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Vector;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InventoryTest {

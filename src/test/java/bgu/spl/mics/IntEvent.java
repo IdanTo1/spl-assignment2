@@ -1,7 +1,7 @@
 package bgu.spl.mics;
 
 public class IntEvent implements Event<Integer> {
-    private int num;
+    private final int num;
 
     public IntEvent(int num) {
         this.num = num;
