@@ -23,8 +23,8 @@ public class FutureTest {
         assertNull(f.get(100, t), "unresolved future differs from null");
         assertFalse(f.isDone(), "unresolved future marked as done");
         f.resolve(TEST_STRING);
-        assertTrue(f.get(100, t).equals(TEST_STRING), "resolved future doesn't contain proper result");
-        assertTrue(f.get().equals(TEST_STRING), "resolved future doesn't contain proper result");
+        assertEquals(f.get(100, t), TEST_STRING, "resolved future doesn't contain proper result");
+        assertEquals(f.get(), TEST_STRING, "resolved future doesn't contain proper result");
         assertTrue(f.isDone(), "resolved future marked as undone");
     }
 }

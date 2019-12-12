@@ -4,8 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageBrokerTest {
     TestSubscriber s1;
@@ -28,7 +27,7 @@ public class MessageBrokerTest {
     @Test
     public void testSingleton() {
         MessageBroker otherInstance = MessageBrokerImpl.getInstance();
-        assertTrue(otherInstance == m, "different instances of singleton MessageBroker exist!");
+        assertSame(otherInstance, m, "different instances of singleton MessageBroker exist!");
     }
 
     private void safeAwaitMessage(boolean twoSubscribers) {
@@ -45,46 +44,45 @@ public class MessageBrokerTest {
         m.sendEvent(new IntEvent(0));
         m.sendEvent(new IntEvent(1));
         safeAwaitMessage(true);
-        assertTrue(s1.getNum() == 0, "Subscriber 1 didn't get the first called event");
-        assertTrue(s2.getNum() == 1, "Subscriber 2 didn't get the second called event");
+        assertEquals(0, s1.getNum(), "Subscriber 1 didn't get the first called event");
+        assertEquals(1, s2.getNum(), "Subscriber 2 didn't get the second called event");
         m.sendEvent(new IntEvent(2));
         safeAwaitMessage( false);
-        assertTrue(s1.getNum() == 2, "Subscriber 1 didn't appear 3rd in a 2 object round-robin");
-        assertTrue(s2.getNum() == 1, "Subscriber s2 received an event it shouldn't have");
+        assertEquals(2, s1.getNum(), "Subscriber 1 didn't appear 3rd in a 2 object round-robin");
+        assertEquals(1, s2.getNum(), "Subscriber s2 received an event it shouldn't have");
     }
 
     @Test
     public void testBroadcastSubscribe() {
         m.sendBroadcast(new IntBroadcast(2));
         safeAwaitMessage(true);
-        assertTrue(s1.getNum() == 2, "Subscriber s1 didn't get the broadcast");
-        assertTrue(s2.getNum() == 2, "Subscriber s2 didn't get the broadcast");
+        assertEquals(2, s1.getNum(), "Subscriber s1 didn't get the broadcast");
+        assertEquals(2, s2.getNum(), "Subscriber s2 didn't get the broadcast");
         m.sendBroadcast(new IntBroadcast(3));
         safeAwaitMessage(true);
-        assertTrue(s1.getNum() == 3, "Subscriber s1 didn't get the broadcast");
-        assertTrue(s2.getNum() == 3, "Subscriber s2 didn't get the broadcast");
+        assertEquals(3, s1.getNum(), "Subscriber s1 didn't get the broadcast");
+        assertEquals(3, s2.getNum(), "Subscriber s2 didn't get the broadcast");
     }
 
     @Test
     public void testComplete() {
         Event<Integer> e = new IntEvent(1);
         Future<Integer> f = m.sendEvent(e);
-        assertTrue(!f.isDone(), "Future object starts completed");
+        assertFalse(f.isDone(), "Future object starts completed");
         m.complete(e, 2);
         assertTrue(f.isDone(), "Future object doesn't complete");
-        assertTrue(f.get() == 2, "Future doesn't return the result");
+        assertEquals(2, (int) f.get(), "Future doesn't return the result");
     }
 
     @Test
     public void testUnregister() {
         m.unregister(s2);
         Future<Integer> f = m.sendEvent(new IntEvent(1));
-        assertTrue(f != null, "sendEvent should return future object");
+        assertNotNull(f, "sendEvent should return future object");
         m.unregister(s1);
         f = m.sendEvent(new IntEvent(1));
-        assertTrue(f == null,
-                "sendEvent should return null future event when" +
-                        " no subscriber is subscribed to messages of certain type");
+        assertNull(f, "sendEvent should return null future event when" +
+                " no subscriber is subscribed to messages of certain type");
     }
 
     @Test

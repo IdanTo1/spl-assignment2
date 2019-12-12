@@ -1,23 +1,18 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.passiveObjects.Agent;
-import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.Squad;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SquadTest {
 
-    public static final Agent agents[] = {new Agent("001", "a"), new Agent("002", "b"),
+    public static final Agent[] agents = {new Agent("001", "a"), new Agent("002", "b"),
             new Agent("003", "c"), new Agent("004", "d")};
     public static final ArrayList<String> agentsNames = new ArrayList<>(Arrays.asList("a", "b", "c", "d"));
     public static final ArrayList<String> agentsSerials = new ArrayList<>(Arrays.asList("001", "002", "003", "004"));
@@ -38,7 +33,7 @@ public class SquadTest {
 
     @Test
     public void testLoad(){
-        assertTrue(squad.getAgentsNames(agentsSerials).equals(agentsNames), "names in squad doesn't match inserted agents' serials");
+        assertEquals(squad.getAgentsNames(agentsSerials), agentsNames, "names in squad doesn't match inserted agents' serials");
     }
 
     @Test
