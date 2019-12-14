@@ -1,5 +1,8 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * Passive data-object representing a information about an agent in MI6.
  * You must not alter any of the given public methods of this class. 
@@ -8,14 +11,22 @@ package bgu.spl.mics.application.passiveObjects;
  */
 public class Agent {
 
-	public Agent(String s, String a) {
+	private AtomicReference<String> _name;
+	private AtomicReference<String> _serial;
+	private AtomicBoolean _available;
+
+	public Agent(String name, String serial) {
+		_name = new AtomicReference<String>(name);
+		_serial = new AtomicReference<String>(serial);
+		_available = new AtomicBoolean(true);
 	}
 
 	/**
 	 * Sets the serial number of an agent.
 	 */
 	public void setSerialNumber(String serialNumber) {
-		// TODO Implement this
+		String currentSerial = serialNumber;
+		while(!_serial.compareAndSet(currentSerial, serialNumber)) {}
 	}
 
 	/**
@@ -24,15 +35,15 @@ public class Agent {
      * @return The serial number of an agent.
      */
 	public String getSerialNumber() {
-		// TODO Implement this
-		return null;
+		return _serial.get();
 	}
 
 	/**
 	 * Sets the name of the agent.
 	 */
 	public void setName(String name) {
-		// TODO Implement this
+		String currentName = _name.get();
+		while(!_name.compareAndSet(currentName, name)) {}
 	}
 
 	/**
@@ -41,8 +52,7 @@ public class Agent {
      * @return the name of the agent.
      */
 	public String getName() {
-		// TODO Implement this
-		return null;
+		return _name.get();
 	}
 
 	/**
@@ -51,21 +61,20 @@ public class Agent {
      * @return if the agent is available.
      */
 	public boolean isAvailable() {
-		// TODO Implement this
-		return false;
+		return _available.get();
 	}
 
 	/**
 	 * Acquires an agent.
 	 */
 	public void acquire(){
-		// TODO Implement this
+		_available.set(false);
 	}
 
 	/**
 	 * Releases an agent.
 	 */
 	public void release(){
-		// TODO Implement this
+		_available.set(true);
 	}
 }
