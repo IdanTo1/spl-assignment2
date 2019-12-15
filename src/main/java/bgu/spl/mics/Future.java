@@ -32,14 +32,14 @@ public class Future<T> {
      * <p>
      *
      * @return return the result of type T if it is available, if not wait until it is available.
-     *
      * @post (isDone = = true)
      */
     public synchronized T get() {
         while (_done == false)
             try {
                 this.wait();
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
         return _result;
     }
 
@@ -50,7 +50,7 @@ public class Future<T> {
      * @post (isDone () == true && get() == result)
      */
     public synchronized void resolve(T result) {
-        if(_done) return;
+        if (_done) return;
         _done = true;
         _result = result;
         notifyAll();
@@ -58,7 +58,6 @@ public class Future<T> {
 
     /**
      * @return true if this object has been resolved, false otherwise
-     *
      * @pre none
      * @post none
      */
@@ -73,17 +72,16 @@ public class Future<T> {
      *
      * @param timeout the maximal amount of time units to wait for the result.
      * @param unit    the {@link TimeUnit} time units to wait.
-     *
      * @return return the result of type T if it is available, if not, wait for {@code timeout} TimeUnits {@code unit}.
      * If time has elapsed, return null.
-     *
      * @post (isDone () == true || current_time >= start_time + timeout
      */
     public T get(long timeout, TimeUnit unit) {
         while (_done == false)
             try {
                 this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
         return _result;
     }
 
