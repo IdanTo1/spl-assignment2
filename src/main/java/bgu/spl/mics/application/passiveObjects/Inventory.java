@@ -2,10 +2,8 @@ package bgu.spl.mics.application.passiveObjects;
 
 import com.google.gson.Gson;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,8 +21,8 @@ import java.util.*;
  * @inv Inventory is a singleton - only one instance of this class can be initialized
  */
 public class Inventory {
-    private List<String> gadgets;
-    private static Inventory instance = null;
+    private List<String> _gadgets;
+    private static Inventory _instance = null;
 
     /**
      * Retrieves the single instance of this class.
@@ -33,14 +31,14 @@ public class Inventory {
      * @post return != null
      */
     public static Inventory getInstance() {
-        if (instance == null)
-            instance = new Inventory();
-        return instance;
+        if (_instance == null)
+            _instance = new Inventory();
+        return _instance;
     }
 
     private Inventory() {
         // only one instance of Q exists, and only Q has access to inventory, so no need for synchronization.
-        gadgets = new ArrayList<>();
+        _gadgets = new ArrayList<>();
     }
 
     /**
@@ -53,7 +51,7 @@ public class Inventory {
      * @post (for str : inventory { getItem ( str)==true)
      */
     public void load(String[] inventory) {
-        gadgets.addAll(Arrays.asList(inventory));
+        _gadgets.addAll(Arrays.asList(inventory));
     }
 
     /**
@@ -68,8 +66,8 @@ public class Inventory {
      * @post getItem(gadget) == false
      */
     public boolean getItem(String gadget) {
-        if (gadgets.contains(gadget)) {
-            gadgets.remove(gadget);
+        if (_gadgets.contains(gadget)) {
+            _gadgets.remove(gadget);
             return true;
         }
         return false;
@@ -85,7 +83,7 @@ public class Inventory {
      */
     public void printToFile(String filename) {
         Gson gson = new Gson();
-        String gadgetsToPrint = gson.toJson(gadgets);
+        String gadgetsToPrint = gson.toJson(_gadgets);
         PrintWriter writer = null;
         Path file = Paths.get("the-file-name.txt");
         try {

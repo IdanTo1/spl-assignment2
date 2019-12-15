@@ -14,8 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @inv Squad is a singleton - only one instance of this class can be initialized
  */
 public class Squad {
-    private static Squad instance = null;
-    private Map<String, Agent> agents;
+    private static Squad _instance = null;
+    private Map<String, Agent> _agents;
 
     /**
      * Retrieves the single instance of this class.
@@ -24,14 +24,14 @@ public class Squad {
      * @post return != null
      */
     public static Squad getInstance() {
-        if (instance == null)
-            instance = new Squad();
-        return instance;
+        if (_instance == null)
+            _instance = new Squad();
+        return _instance;
     }
 
     private Squad() {
         // squad is accessed by Moneypenny, which my have several instances, so thread-safe structure is needed.
-        agents = new ConcurrentHashMap<>();
+        _agents = new ConcurrentHashMap<>();
     }
 
     /**
@@ -45,7 +45,7 @@ public class Squad {
      */
     public void load(Agent[] agents) {
         for (Agent agent : agents) {
-            this.agents.put(agent.getSerialNumber(), agent);
+            this._agents.put(agent.getSerialNumber(), agent);
         }
     }
 
@@ -58,7 +58,7 @@ public class Squad {
     public void releaseAgents(List<String> serials) {
         Agent agent;
     	for (String serial : serials) {
-            agent = agents.get(serial);
+            agent = _agents.get(serial);
             agent.release();
             agent.notifyAll();
         }
@@ -91,13 +91,13 @@ public class Squad {
 		Agent agent;
 		// First, make sure all agent exists in the squad, to avoid acquiring and releasing.
 		for (String serial : serials) {
-			agent = agents.get(serial);
+			agent = _agents.get(serial);
 			if (agent == null)
 				return false;
 		}
 		// after validating all agent exists in the
 		for (String serial : serials) {
-			agent = agents.get(serial);
+			agent = _agents.get(serial);
 			synchronized (agent) {
 				while (!agent.isAvailable()) {
 					try {wait();} catch (InterruptedException e) {}
@@ -121,7 +121,7 @@ public class Squad {
     public List<String> getAgentsNames(List<String> serials) {
         List<String> names = new ArrayList<>();
     	for (String serial : serials) {
-			names.add(agents.get(serial).getName());
+			names.add(_agents.get(serial).getName());
 		}
         return names;
     }
