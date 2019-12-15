@@ -1,5 +1,15 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import com.google.gson.Gson;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -23,13 +33,14 @@ public class Inventory {
      * @post return != null
      */
     public static Inventory getInstance() {
-        //TODO: Implement this
-        return null;
+        if (instance == null)
+            instance = new Inventory();
+        return instance;
     }
 
     private Inventory() {
         // only one instance of Q exists, and only Q has access to inventory, so no need for synchronization.
-        gadgets = new ArrayList<String>();
+        gadgets = new ArrayList<>();
     }
 
     /**
@@ -42,7 +53,7 @@ public class Inventory {
      * @post (for str : inventory { getItem ( str)==true)
      */
     public void load(String[] inventory) {
-        //TODO: Implement this
+        gadgets.addAll(Arrays.asList(inventory));
     }
 
     /**
@@ -57,8 +68,11 @@ public class Inventory {
      * @post getItem(gadget) == false
      */
     public boolean getItem(String gadget) {
-        //TODO: Implement this
-        return true;
+        if (gadgets.contains(gadget)) {
+            gadgets.remove(gadget);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -70,6 +84,12 @@ public class Inventory {
      * @post none
      */
     public void printToFile(String filename) {
-        //TODO: Implement this
+        Gson gson = new Gson();
+        String gadgetsToPrint = gson.toJson(gadgets);
+        PrintWriter writer = null;
+        Path file = Paths.get("the-file-name.txt");
+        try {
+            Files.write(file, Collections.singleton(gadgetsToPrint), StandardCharsets.UTF_8);
+        } catch (IOException e) {}
     }
 }
