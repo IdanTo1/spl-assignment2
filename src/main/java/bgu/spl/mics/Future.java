@@ -35,7 +35,7 @@ public class Future<T> {
      * @post (isDone = = true)
      */
     public synchronized T get() {
-        while (_done == false)
+        while (!_done)
             try {
                 this.wait();
             } catch (InterruptedException ignored) {
@@ -50,7 +50,6 @@ public class Future<T> {
      * @post (isDone () == true && get() == result)
      */
     public synchronized void resolve(T result) {
-        if (_done) return;
         _done = true;
         _result = result;
         notifyAll();
@@ -77,7 +76,7 @@ public class Future<T> {
      * @post (isDone () == true || current_time >= start_time + timeout
      */
     public T get(long timeout, TimeUnit unit) {
-        while (_done == false)
+        while (!_done)
             try {
                 this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
             } catch (InterruptedException ignored) {
