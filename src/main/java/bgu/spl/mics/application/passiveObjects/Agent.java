@@ -11,11 +11,11 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class Agent {
 
-    private AtomicReference<String> _name;
     private AtomicReference<String> _serial;
+    private AtomicReference<String> _name;
     private AtomicBoolean _available;
 
-    public Agent(String name, String serial) {
+    public Agent(String serial, String name) {
         _name = new AtomicReference<>(name);
         _serial = new AtomicReference<>(serial);
         _available = new AtomicBoolean(true);
@@ -27,7 +27,7 @@ public class Agent {
     public void setSerialNumber(String serialNumber) {
         String currentSerial;
         do {
-            currentSerial = serialNumber;
+            currentSerial = _serial.get();
         }
         while (!_serial.compareAndSet(currentSerial, serialNumber));
 
