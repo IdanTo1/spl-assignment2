@@ -1,9 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Passive data-object representing a information about an agent in MI6. You must not alter any of the given public
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @inv Squad is a singleton - only one instance of this class can be initialized
  */
 public class Squad {
-    private static Squad _instance = null;
+    private static Squad _instance = new Squad();
     private Map<String, Agent> _agents;
 
     /**
@@ -24,14 +24,12 @@ public class Squad {
      * @post return != null
      */
     public static Squad getInstance() {
-        if (_instance == null)
-            _instance = new Squad();
         return _instance;
     }
 
     private Squad() {
         // squad is accessed by Moneypenny, which my have several instances, so thread-safe structure is needed.
-        _agents = new ConcurrentHashMap<>();
+        _agents = new HashMap<>();
     }
 
     /**
@@ -45,6 +43,7 @@ public class Squad {
      */
     public void load(Agent[] agents) {
         for (Agent agent : agents) {
+            // shouldn't be synchronized because only main thread loads the squad, before multiThreading
             this._agents.put(agent.getSerialNumber(), agent);
         }
     }
@@ -59,8 +58,10 @@ public class Squad {
         Agent agent;
     	for (String serial : serials) {
             agent = _agents.get(serial);
-            agent.release();
-            agent.notifyAll();
+            synchronized (agent) {
+                agent.release();
+                agent.notifyAll();
+            }
         }
     }
 
@@ -73,7 +74,11 @@ public class Squad {
      * @post (current_time > = start_time + time & & getAgents ( serials) == true)
      */
     public void sendAgents(List<String> serials, int time) {
-        try {Thread.sleep(time);} catch (InterruptedException e) {}
+        // TODO is squad a subscriber? how can it know about time ticks?
+//        try {Thread.sleep(time);} catch (InterruptedException e) {}
+        /* */
+        final int TIME_TICKS_FACTOR = 100;
+        try {Thread.sleep(time * TIME_TICKS_FACTOR);} catch (InterruptedException ignored) {}
         releaseAgents(serials);
     }
 
@@ -100,7 +105,7 @@ public class Squad {
 			agent = _agents.get(serial);
 			synchronized (agent) {
 				while (!agent.isAvailable()) {
-					try {wait();} catch (InterruptedException e) {}
+					try {agent.wait();} catch (InterruptedException ignored) {}
 					agent.acquire();
 				}
 			}

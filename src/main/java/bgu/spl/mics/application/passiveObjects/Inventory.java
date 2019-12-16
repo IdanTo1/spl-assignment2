@@ -81,13 +81,11 @@ public class Inventory {
      * @pre none
      * @post none
      */
-    public void printToFile(String filename) {
+    public void printToFile(String filename) throws IOException {
         Gson gson = new Gson();
         String gadgetsToPrint = gson.toJson(_gadgets);
         PrintWriter writer = null;
-        Path file = Paths.get("the-file-name.txt");
-        try {
-            Files.write(file, Collections.singleton(gadgetsToPrint), StandardCharsets.UTF_8);
-        } catch (IOException e) {}
+        Path file = Paths.get(filename);
+        Files.write(file, Collections.singleton(gadgetsToPrint), StandardCharsets.UTF_8);
     }
 }
