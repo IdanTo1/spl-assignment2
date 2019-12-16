@@ -1,6 +1,8 @@
 package bgu.spl.mics;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A Future object represents a promised result - an object that will eventually be resolved to hold a result of some
@@ -20,7 +22,8 @@ public class Future<T> {
      * @post (isDone = = false)
      */
     public Future() {
-        //TODO: implement this
+        _done = false;
+        _result = null;
     }
 
     /**
@@ -29,12 +32,15 @@ public class Future<T> {
      * <p>
      *
      * @return return the result of type T if it is available, if not wait until it is available.
-     *
      * @post (isDone = = true)
      */
-    public T get() {
-        //TODO: implement this.
-        return null;
+    public synchronized T get() {
+        while (!_done)
+            try {
+                this.wait();
+            } catch (InterruptedException ignored) {
+            }
+        return _result;
     }
 
     /**
@@ -43,19 +49,19 @@ public class Future<T> {
      * @pre (isDone () == false)
      * @post (isDone () == true && get() == result)
      */
-    public void resolve(T result) {
-        //TODO: implement this.
+    public synchronized void resolve(T result) {
+        _done = true;
+        _result = result;
+        notifyAll();
     }
 
     /**
      * @return true if this object has been resolved, false otherwise
-     *
      * @pre none
      * @post none
      */
     public boolean isDone() {
-        //TODO: implement this.
-        return false;
+        return _done;
     }
 
     /**
@@ -65,15 +71,17 @@ public class Future<T> {
      *
      * @param timeout the maximal amount of time units to wait for the result.
      * @param unit    the {@link TimeUnit} time units to wait.
-     *
      * @return return the result of type T if it is available, if not, wait for {@code timeout} TimeUnits {@code unit}.
      * If time has elapsed, return null.
-     *
      * @post (isDone () == true || current_time >= start_time + timeout
      */
     public T get(long timeout, TimeUnit unit) {
-        //TODO: implement this.
-        return null;
+        while (!_done)
+            try {
+                this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
+            } catch (InterruptedException ignored) {
+            }
+        return _result;
     }
 
 }
