@@ -59,7 +59,7 @@ public class Report {
 	 * <p>
 	 * @return The serial numbers of the agents.
 	 */
-	public List<String> getAgentsSerialNumbersNumber() {
+	public List<String> getAgentsSerialNumbers() {
 		// TODO Implement this
 		return null;
 	}
@@ -67,7 +67,7 @@ public class Report {
 	/**
 	 * Sets the serial numbers of the agents.
 	 */
-	public void setAgentsSerialNumbersNumber(List<String> agentsSerialNumbersNumber) {
+	public void setAgentsSerialNumbers(List<String> agentsSerialNumbers) {
 		// TODO Implement this
 	}
 
