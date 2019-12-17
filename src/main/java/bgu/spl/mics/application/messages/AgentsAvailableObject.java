@@ -4,7 +4,7 @@ import java.util.List;
 
 public class AgentsAvailableObject {
     private List<String> _agentsSerials;
-    private List<String> _agentsNames; //TODO maybe only agents, event with serial and future with names?
+    private List<String> _agentsNames;
     private int _missionDuration;
     private int _MoneypennySerial;
     private boolean _sendMission = false;
@@ -62,10 +62,10 @@ public class AgentsAvailableObject {
 
     /**
      * sets the serial number of the Moneypenny who acquired the agents.
-     * @param _MoneypennySerial Moneypenny's serial
+     * @param MoneypennySerial Moneypenny's serial
      */
-    public void setMoneypennySerial(int _MoneypennySerial) {
-        this._MoneypennySerial = _MoneypennySerial;
+    public void setMoneypennySerial(int MoneypennySerial) {
+        this._MoneypennySerial = MoneypennySerial;
     }
 
     /**
