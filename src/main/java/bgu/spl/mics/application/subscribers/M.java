@@ -51,17 +51,23 @@ public class M extends Subscriber {
             gadgetAvailableFuture = this.getSimplePublisher().sendEvent(new GadgetAvailableEvent(gadgetAvailableObject));
             // check whether Q acquired the gadget, and allocate all relevant details
             gadgetAvailableObject = gadgetAvailableFuture.get(); //M and Q uses the same gadgetObject
-            if (!gadgetAvailableObject.isGadgetExists()) return;
+            if (!gadgetAvailableObject.isGadgetExists()) {
+                agentsAvailableObject.terminateMission();
+                agentsAvailableObject.notifyAll();
+                return;
+            }
             String gadget = gadgetAvailableObject.getGadget();
             int Qtime = gadgetAvailableObject.getQtime();
             // check if mission time expired
             if (_currTime > info.getTimeExpired()) {
                 // signal Moneypenny she should release the agents.
                 agentsAvailableObject.terminateMission();
+                agentsAvailableObject.notifyAll();
                 return;
             }
             // signal Moneypenny she should send the agents.
             agentsAvailableObject.sendMission();
+            agentsAvailableObject.notifyAll();
 
             // generate the mission report with all the allocated data.
             Report report = createReport(missionName, timeIssued, MoneypennySerial, agentsSerials,

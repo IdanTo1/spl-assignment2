@@ -39,7 +39,7 @@ public class Moneypenny extends Subscriber {
 			}
 			complete(e, result);
 			while (!result.isSendMission() || !result.isTerminateMission()) {
-				try {e.wait();} catch (InterruptedException ignored) {}
+				try {result.wait();} catch (InterruptedException ignored) {}
 			}
 			if (result.isSendMission()) squad.sendAgents(agentsSerials, result.getMissionDuration());
 			if (result.isTerminateMission()) squad.releaseAgents(agentsSerials);
