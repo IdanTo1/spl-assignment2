@@ -38,10 +38,15 @@ public class Diary {
 
 	private Diary() {
 		_diary = new ArrayList<>();
+		// Using Read-Write Lock to safeguard the diary from multiple threads accessing it at the same time
 		_lock = new ReentrantReadWriteLock();
 		_total = new AtomicInteger(0);
 	}
 
+	/**
+	 *
+	 * @return The list of reports
+	 */
 	public List<Report> getReports() {
 		return _diary;
 	}
@@ -67,7 +72,6 @@ public class Diary {
 		_lock.readLock().lock();
 		Gson gson = new Gson();
 		String reportsToPrint = gson.toJson(_diary);
-		PrintWriter writer = null;
 		Path file = Paths.get(filename);
 		Files.write(file, Collections.singleton(reportsToPrint), StandardCharsets.UTF_8);
 		_lock.readLock().unlock();
@@ -85,11 +89,11 @@ public class Diary {
 	 * Increments the total number of received missions by 1
 	 */
 	public void incrementTotal(){
-		int localTotal;
+		int oldTotal;
 		do
 		{
-			localTotal = _total.get();
+			oldTotal = _total.get();
 		}
-		while (!_total.compareAndSet(localTotal, localTotal+1));
+		while (!_total.compareAndSet(oldTotal, oldTotal+1));
 	}
 }
