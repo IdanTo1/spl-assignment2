@@ -1,5 +1,13 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -13,8 +21,8 @@ import java.util.*;
  * @inv Inventory is a singleton - only one instance of this class can be initialized
  */
 public class Inventory {
-    private List<String> gadgets;
-    private static Inventory instance = null;
+    private List<String> _gadgets;
+    private static Inventory _instance = null;
 
     /**
      * Retrieves the single instance of this class.
@@ -23,13 +31,14 @@ public class Inventory {
      * @post return != null
      */
     public static Inventory getInstance() {
-        //TODO: Implement this
-        return null;
+        if (_instance == null)
+            _instance = new Inventory();
+        return _instance;
     }
 
     private Inventory() {
         // only one instance of Q exists, and only Q has access to inventory, so no need for synchronization.
-        gadgets = new ArrayList<String>();
+        _gadgets = new ArrayList<>();
     }
 
     /**
@@ -42,7 +51,7 @@ public class Inventory {
      * @post (for str : inventory { getItem ( str)==true)
      */
     public void load(String[] inventory) {
-        //TODO: Implement this
+        _gadgets.addAll(Arrays.asList(inventory));
     }
 
     /**
@@ -57,8 +66,11 @@ public class Inventory {
      * @post getItem(gadget) == false
      */
     public boolean getItem(String gadget) {
-        //TODO: Implement this
-        return true;
+        if (_gadgets.contains(gadget)) {
+            _gadgets.remove(gadget);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -69,7 +81,11 @@ public class Inventory {
      * @pre none
      * @post none
      */
-    public void printToFile(String filename) {
-        //TODO: Implement this
+    public void printToFile(String filename) throws IOException {
+        Gson gson = new Gson();
+        String gadgetsToPrint = gson.toJson(_gadgets);
+        PrintWriter writer = null;
+        Path file = Paths.get(filename);
+        Files.write(file, Collections.singleton(gadgetsToPrint), StandardCharsets.UTF_8);
     }
 }
