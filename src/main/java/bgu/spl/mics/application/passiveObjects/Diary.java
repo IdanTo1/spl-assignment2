@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 public class Diary {
 	private static Diary _instance = new Diary();
 	private List<Report> _diary;
-	private int _total;
+	private AtomicInteger _total;
 	// No need to use anything other than synchronization because there will only be a write to the diary twice per
 	// mission, once in the increment and the other when adding the report to the diary
 
@@ -39,8 +39,7 @@ public class Diary {
 
 	private Diary() {
 		_diary = new ArrayList<>();
-		// Using Read-Write Lock to safeguard the diary from multiple threads accessing it at the same time
-		_total = 0;
+		_total = new AtomicInteger(0);
 	}
 
 	/**
@@ -77,14 +76,17 @@ public class Diary {
 	 * Gets the total number of received missions (executed / aborted) be all the M-instances.
 	 * @return the total number of received missions (executed / aborted) be all the M-instances.
 	 */
-	public synchronized int getTotal(){
-		return _total;
+	public int getTotal(){
+		return _total.get();
 	}
 
 	/**
 	 * Increments the total number of received missions by 1
 	 */
-	public synchronized void incrementTotal(){
-		_total++;
+	public void incrementTotal(){
+		int oldTotal;
+		do {
+			oldTotal = _total.get();
+		} while(!_total.compareAndSet(oldTotal, oldTotal+1));
 	}
 }
