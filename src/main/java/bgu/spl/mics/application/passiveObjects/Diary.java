@@ -26,8 +26,9 @@ import java.nio.file.Paths;
 public class Diary {
 	private static Diary _instance = new Diary();
 	private List<Report> _diary;
-	private ReadWriteLock _lock;
-	private AtomicInteger _total;
+	private int _total;
+	// No need to use anything other than synchronization because there will only be a write to the diary twice per
+	// mission, once in the increment and the other when adding the report to the diary
 
 	/**
 	 * Retrieves the single instance of this class.
@@ -39,15 +40,14 @@ public class Diary {
 	private Diary() {
 		_diary = new ArrayList<>();
 		// Using Read-Write Lock to safeguard the diary from multiple threads accessing it at the same time
-		_lock = new ReentrantReadWriteLock();
-		_total = new AtomicInteger(0);
+		_total = 0;
 	}
 
 	/**
 	 *
 	 * @return The list of reports
 	 */
-	public List<Report> getReports() {
+	public synchronized List<Report> getReports() {
 		return _diary;
 	}
 
@@ -55,10 +55,8 @@ public class Diary {
 	 * adds a report to the diary
 	 * @param reportToAdd - the report to add
 	 */
-	public void addReport(Report reportToAdd){
-		_lock.writeLock().lock();
+	public synchronized void addReport(Report reportToAdd){
 		_diary.add(reportToAdd);
-		_lock.writeLock().unlock();
 	}
 
 	/**
@@ -68,32 +66,25 @@ public class Diary {
 	 * List of all the reports in the diary.
 	 * This method is called by the main method in order to generate the output.
 	 */
-	public void printToFile(String filename) throws IOException {
-		_lock.readLock().lock();
+	public synchronized void printToFile(String filename) throws IOException {
 		Gson gson = new Gson();
 		String reportsToPrint = gson.toJson(_diary);
 		Path file = Paths.get(filename);
 		Files.write(file, Collections.singleton(reportsToPrint), StandardCharsets.UTF_8);
-		_lock.readLock().unlock();
 	}
 
 	/**
 	 * Gets the total number of received missions (executed / aborted) be all the M-instances.
 	 * @return the total number of received missions (executed / aborted) be all the M-instances.
 	 */
-	public int getTotal(){
-		return _total.get();
+	public synchronized int getTotal(){
+		return _total;
 	}
 
 	/**
 	 * Increments the total number of received missions by 1
 	 */
-	public void incrementTotal(){
-		int oldTotal;
-		do
-		{
-			oldTotal = _total.get();
-		}
-		while (!_total.compareAndSet(oldTotal, oldTotal+1));
+	public synchronized void incrementTotal(){
+		_total++;
 	}
 }
