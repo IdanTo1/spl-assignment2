@@ -9,7 +9,7 @@ import bgu.spl.mics.application.passiveObjects.MissionInfo;
 public class MissionReceivedEvent implements Event<MissionInfo> {
     private MissionInfo _mission;
 
-    MissionReceivedEvent(MissionInfo mission) {
+    public MissionReceivedEvent(MissionInfo mission) {
         this._mission = mission;
     }
 
@@ -17,7 +17,7 @@ public class MissionReceivedEvent implements Event<MissionInfo> {
      * Retrieves the mission to be executed information
      * @return mission information
      */
-    MissionInfo getMission() {
+    public MissionInfo getMission() {
         return _mission;
     }
 }

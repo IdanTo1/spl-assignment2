@@ -10,7 +10,7 @@ public class AgentsAvailableObject {
     private boolean _sendMission = false;
     private boolean _terminateMission = false;
 
-    AgentsAvailableObject(List<String> agentsSerials, int missionDuration) {
+    public AgentsAvailableObject(List<String> agentsSerials, int missionDuration) {
         _agentsSerials = agentsSerials;
         _missionDuration = missionDuration;
     }

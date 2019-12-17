@@ -5,7 +5,7 @@ public class GadgetAvailableObject {
     int _Qtime = 0;
     boolean _gadgetExists = false;
 
-    GadgetAvailableObject(String gadget) {
+    public GadgetAvailableObject(String gadget) {
         _gadget = gadget;
     }
 
