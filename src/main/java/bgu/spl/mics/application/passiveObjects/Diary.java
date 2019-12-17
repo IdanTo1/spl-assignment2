@@ -42,6 +42,7 @@ public class Diary {
 		_total = new AtomicInteger(0);
 	}
 
+	// The synchronization in the class is only when accessing the _diary object, since _total is implemented lock-free
 	/**
 	 *
 	 * @return The list of reports
