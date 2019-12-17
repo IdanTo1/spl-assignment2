@@ -2,6 +2,13 @@ package bgu.spl.mics.application.subscribers;
 
 import bgu.spl.mics.Publisher;
 import bgu.spl.mics.Subscriber;
+import bgu.spl.mics.application.messages.MissionReceivedEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.passiveObjects.MissionInfo;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * A Publisher only.
@@ -11,15 +18,22 @@ import bgu.spl.mics.Subscriber;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class Intelligence extends Subscriber {
+	private int _serial;
+	private PriorityQueue<MissionInfo> _missions;
 
-	public Intelligence() {
-		super("Change_This_Name");
-		// TODO Implement this
-	}
+	public Intelligence(int serial, List<MissionInfo> missions) {
+		super("Intelligence" + serial);
+		_serial = serial;
+		_missions = new PriorityQueue<>(missions.size(), Comparator.comparingInt(MissionInfo::getTimeIssued));
+		_missions.addAll(missions);
+		}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		subscribeBroadcast(TickBroadcast.class, (TickBroadcast b)->{
+			while (b.getCurrTime() == _missions.peek().getTimeIssued())
+				getSimplePublisher().sendEvent(new MissionReceivedEvent(_missions.poll()));
+		});
 	}
 
 }
