@@ -11,6 +11,9 @@ public class AgentsAvailableEvent implements Event<AgentsAvailableObject> {
 
     AgentsAvailableEvent(AgentsAvailableObject obj) {
         _obj = obj;
+    }
 
+    public AgentsAvailableObject getObj() {
+        return _obj;
     }
 }
