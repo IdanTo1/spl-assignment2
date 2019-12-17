@@ -74,11 +74,7 @@ public class Squad {
      * @post (current_time > = start_time + time & & getAgents ( serials) == true)
      */
     public void sendAgents(List<String> serials, int time) {
-        // TODO is squad a subscriber? how can it know about time ticks?
-//        try {Thread.sleep(time);} catch (InterruptedException e) {}
-        /* */
-        final int TIME_TICKS_FACTOR = 100;
-        try {Thread.sleep(time * TIME_TICKS_FACTOR);} catch (InterruptedException ignored) {}
+        // as to Forum answer, sendAgents should do absolutely nothing
         releaseAgents(serials);
     }
 
