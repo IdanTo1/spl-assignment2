@@ -19,22 +19,16 @@ public class Report {
     private List<String> _agentsNames;
     private int _qTime;
 
-    private void initialize(String missionName, int M, List<String> agentsSerialNumbers, String gadgetName, int timeIssued,
-                            int timeCreated) {
-        _missionName = missionName;
-        _M = M;
-        _agentsSerialNumbers = agentsSerialNumbers;
-        _gadgetName = gadgetName;
-        _timeIssued = timeIssued;
-        _timeCreated = timeCreated;
+    public Report() {
+        _missionName = "";
+        _M = -1;
+        _agentsSerialNumbers = null;
+        _gadgetName = "";
+        _timeCreated = -1;
+        _timeIssued = -1;
         _MoneyPenny = -1;
         _agentsNames = null;
         _qTime = -1;
-    }
-
-    public Report(MissionInfo missionInfo, int M, int timeCreated) {
-        initialize(missionInfo.getMissionName(), M, missionInfo.getSerialAgentsNumbers(), missionInfo.getGadget(),
-                missionInfo.getTimeIssued(), timeCreated);
     }
 
     /**
