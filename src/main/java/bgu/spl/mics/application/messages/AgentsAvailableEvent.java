@@ -9,7 +9,7 @@ import bgu.spl.mics.Event;
 public class AgentsAvailableEvent implements Event<AgentsAvailableObject> {
     private AgentsAvailableObject _obj;
 
-    AgentsAvailableEvent(AgentsAvailableObject obj) {
+    public AgentsAvailableEvent(AgentsAvailableObject obj) {
         _obj = obj;
     }
 

@@ -8,7 +8,7 @@ import bgu.spl.mics.Broadcast;
 public class TickBroadcast implements Broadcast {
     int _currTime;
 
-    TickBroadcast(int time) {
+    public TickBroadcast(int time) {
         _currTime = time;
     }
 

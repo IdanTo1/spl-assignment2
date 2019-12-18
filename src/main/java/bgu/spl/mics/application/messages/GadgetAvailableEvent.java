@@ -8,7 +8,7 @@ import bgu.spl.mics.Event;
 public class GadgetAvailableEvent implements Event<GadgetAvailableObject> {
     private GadgetAvailableObject _obj;
 
-    GadgetAvailableEvent(GadgetAvailableObject obj) {
+    public GadgetAvailableEvent(GadgetAvailableObject obj) {
         _obj = obj;
     }
 
