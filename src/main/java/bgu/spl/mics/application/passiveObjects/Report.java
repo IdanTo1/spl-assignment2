@@ -17,18 +17,10 @@ public class Report {
     private int _timeCreated;
     private int _MoneyPenny;
     private List<String> _agentsNames;
-    private int _qTime;
+    private int _QTime;
 
     public Report() {
-        _missionName = "";
-        _M = -1;
-        _agentsSerialNumbers = null;
-        _gadgetName = "";
-        _timeCreated = -1;
-        _timeIssued = -1;
-        _MoneyPenny = -1;
-        _agentsNames = null;
-        _qTime = -1;
+        // Initialization isn't needed because M sets all the variables upon creation
     }
 
     /**
@@ -129,14 +121,14 @@ public class Report {
      * Retrieves the time-tick in which Q Received the GadgetAvailableEvent for that mission.
      */
     public int getQTime() {
-        return _qTime;
+        return _QTime;
     }
 
     /**
      * Sets the time-tick in which Q Received the GadgetAvailableEvent for that mission.
      */
     public void setQTime(int qTime) {
-        _qTime = qTime;
+        _QTime = qTime;
     }
 
     /**
