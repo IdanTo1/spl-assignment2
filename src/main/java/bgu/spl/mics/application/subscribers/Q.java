@@ -6,7 +6,6 @@ import bgu.spl.mics.application.messages.GadgetAvailableEvent;
 import bgu.spl.mics.application.messages.GadgetAvailableObject;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
-import sun.jvm.hotspot.debugger.win32.coff.COFFException;
 
 import java.util.concurrent.CountDownLatch;
 
