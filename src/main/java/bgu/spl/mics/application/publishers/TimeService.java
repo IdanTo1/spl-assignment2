@@ -41,6 +41,7 @@ public class TimeService extends Publisher {
 				Thread.sleep(100);
 			}
 			catch (InterruptedException ignored) {}
+			_currentTick++;
 		}
 	}
 
