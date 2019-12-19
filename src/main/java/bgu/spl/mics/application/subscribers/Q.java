@@ -7,6 +7,8 @@ import bgu.spl.mics.application.messages.GadgetAvailableObject;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * Q is the only Subscriber\Publisher that has access to the {@link bgu.spl.mics.application.passiveObjects.Inventory}.
  * <p>
@@ -15,27 +17,30 @@ import bgu.spl.mics.application.passiveObjects.Inventory;
  */
 public class Q extends Subscriber {
 
-	private int _currTime = 0;
-	private Inventory inventory;
+    private int _currTime = 0;
+    private Inventory inventory;
+    private CountDownLatch _signalInitialized;
 
-	public Q() {
-		super("Q");
-		inventory = Inventory.getInstance();
-	}
+    public Q(CountDownLatch signalInitialized) {
+        super("Q");
+        inventory = Inventory.getInstance();
+        _signalInitialized = signalInitialized;
+    }
 
-	@Override
-	protected void initialize() {
-		subscribeBroadcast(TickBroadcast.class, (TickBroadcast b)->_currTime = b.getCurrTime());
-		subscribeEvent(GadgetAvailableEvent.class, (GadgetAvailableEvent e)->
-		{
-			GadgetAvailableObject result = e.getObj();
-			String gadget = result.getGadget();
-			if (inventory.getItem(gadget)) {
-				result.setGadgetExists();
-			}
-			result.setQtime(_currTime);
-			complete(e, result);
-		});
-	}
+    @Override
+    protected void initialize() {
+        subscribeBroadcast(TickBroadcast.class, (TickBroadcast b) -> _currTime = b.getCurrTime());
+        subscribeEvent(GadgetAvailableEvent.class, (GadgetAvailableEvent e) ->
+        {
+            GadgetAvailableObject result = e.getObj();
+            String gadget = result.getGadget();
+            if (inventory.getItem(gadget)) {
+                result.setGadgetExists();
+            }
+            result.setQtime(_currTime);
+            complete(e, result);
+        });
+        _signalInitialized.countDown();
+    }
 
 }
