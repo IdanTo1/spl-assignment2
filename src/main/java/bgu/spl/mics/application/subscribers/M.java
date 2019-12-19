@@ -8,6 +8,7 @@ import bgu.spl.mics.application.passiveObjects.MissionInfo;
 import bgu.spl.mics.application.passiveObjects.Report;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * M handles ReadyEvent - fills a report and sends agents to mission.
@@ -16,14 +17,16 @@ import java.util.List;
  * public constructors.
  */
 public class M extends Subscriber {
-    int _currTime = 0;
-    int _serial;
-    Diary diary;
+    private int _currTime = 0;
+    private int _serial;
+    private Diary diary;
+    private CountDownLatch _signalInitialized;
 
-    public M(int serial) {
+    public M(int serial, CountDownLatch signalInitialized) {
         super("M" + serial);
         _serial = serial;
         diary = Diary.getInstance();
+        _signalInitialized = signalInitialized;
     }
 
     @Override
@@ -75,6 +78,7 @@ public class M extends Subscriber {
             diary.addReport(report);
             complete(e, info);
         });
+        _signalInitialized.countDown();
     }
 
     /**
@@ -88,7 +92,6 @@ public class M extends Subscriber {
      * @param agentsNames      the names of the agents sent to the mission
      * @param Qtime            the time-tick in which Q Received the GadgetAvailableEvent for that mission
      * @param gadget           the gadget which was used in the mission
-     *
      * @return a detailed report of the mission
      */
     public Report createReport(String missionName, int timeIssued, int MoneypennySerial, List<String> agentsSerials, List<String> agentsNames,

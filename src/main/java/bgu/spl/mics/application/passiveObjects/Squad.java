@@ -37,7 +37,6 @@ public class Squad {
      * <p>
      *
      * @param agents Data structure containing all data necessary for initialization of the squad.
-     *
      * @pre none
      * @post (for agent : agents { getAgents ( agent.getSerialNumber) == true})
      */
@@ -56,7 +55,7 @@ public class Squad {
      */
     public void releaseAgents(List<String> serials) {
         Agent agent;
-    	for (String serial : serials) {
+        for (String serial : serials) {
             agent = _agents.get(serial);
             synchronized (agent) {
                 agent.release();
@@ -69,12 +68,15 @@ public class Squad {
      * simulates executing a mission by calling sleep.
      *
      * @param time milliseconds to sleep
-     *
      * @pre (for serial : serials { getAgents ( [serial]).state == BLOCKED})
      * @post (current_time > = start_time + time & & getAgents ( serials) == true)
      */
     public void sendAgents(List<String> serials, int time) {
-        // as to Forum answer, sendAgents should do absolutely nothing
+        // A time-tick is 100ms and as stated in the forum this should be the implementation of sendAgents
+        try {
+            Thread.sleep(time * 100);
+        } catch (InterruptedException ignored) {
+        }
         releaseAgents(serials);
     }
 
@@ -82,48 +84,47 @@ public class Squad {
      * acquires an agent, i.e. holds the agent until the caller is done with it
      *
      * @param serials the serial numbers of the agents
-     *
      * @return ‘false’ if an agent of serialNumber ‘serial’ is missing, and ‘true’ otherwise
-     *
      * @pre none
      * @post (for serial : serials { getAgents ( [serial]).state == BLOCKED})
      */
     public boolean getAgents(List<String> serials) {
-		Agent agent;
-		// First, make sure all agent exists in the squad, to avoid acquiring and releasing.
-		for (String serial : serials) {
-			agent = _agents.get(serial);
-			if (agent == null)
-				return false;
-		}
-		// after validating all agent exists in the
-		for (String serial : serials) {
-			agent = _agents.get(serial);
-			synchronized (agent) {
-				while (!agent.isAvailable()) {
-					try {agent.wait();} catch (InterruptedException ignored) {}
-					agent.acquire();
-				}
-			}
-		}
-		return true;
+        Agent agent;
+        // First, make sure all agent exists in the squad, to avoid acquiring and releasing.
+        for (String serial : serials) {
+            agent = _agents.get(serial);
+            if (agent == null)
+                return false;
+        }
+        // after validating all agent exists in the
+        for (String serial : serials) {
+            agent = _agents.get(serial);
+            synchronized (agent) {
+                while (!agent.isAvailable()) {
+                    try {
+                        agent.wait();
+                    } catch (InterruptedException ignored) {
+                    }
+                    agent.acquire();
+                }
+            }
+        }
+        return true;
     }
 
     /**
      * gets the agents names
      *
      * @param serials the serial numbers of the agents
-     *
      * @return a list of the names of the agents with the specified serials.
-     *
      * @pre none
      * @post none
      */
     public List<String> getAgentsNames(List<String> serials) {
         List<String> names = new ArrayList<>();
-    	for (String serial : serials) {
-			names.add(_agents.get(serial).getName());
-		}
+        for (String serial : serials) {
+            names.add(_agents.get(serial).getName());
+        }
         return names;
     }
 
