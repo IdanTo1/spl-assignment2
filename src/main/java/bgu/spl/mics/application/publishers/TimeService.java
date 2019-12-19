@@ -6,6 +6,7 @@ import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * TimeService is the global system timer There is only one instance of this Publisher.
@@ -19,11 +20,13 @@ import java.util.TimerTask;
 public class TimeService extends Publisher {
     private int _currentTick;
     private final int _maxTicks;
+    private final CountDownLatch _signalStarted;
 
-    public TimeService(int max_ticks) {
+    public TimeService(int max_ticks, CountDownLatch signalStarted) {
         super("TimerService");
         _currentTick = 0;
         _maxTicks = max_ticks;
+        _signalStarted = signalStarted;
     }
 
     @Override
@@ -31,6 +34,11 @@ public class TimeService extends Publisher {
 
     @Override
     public void run() {
+    	while(_signalStarted.getCount() > 0) {
+			try {
+				_signalStarted.await();
+			} catch (InterruptedException ignored) { }
+		}
         while (_currentTick <= _maxTicks) {
             getSimplePublisher().sendBroadcast(new TickBroadcast(_currentTick));
             try {
