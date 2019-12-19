@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * The Subscriber is an abstract class that any subscriber in the system
  * must extend. The abstract Subscriber class is responsible to get and
@@ -17,6 +19,10 @@ package bgu.spl.mics;
  */
 public abstract class Subscriber extends RunnableSubPub {
     private boolean terminated = false;
+    // Usage of Class and Callback as without parameterized type to accommodate
+    // for different types of Messages and Callbacks
+    private ConcurrentHashMap<Class, Callback> _messageToCallback;
+    private MessageBroker _m;
 
     /**
      * @param name the Subscriber name (used mainly for debugging purposes -
@@ -24,6 +30,8 @@ public abstract class Subscriber extends RunnableSubPub {
      */
     public Subscriber(String name) {
         super(name);
+        _messageToCallback = new ConcurrentHashMap<>();
+        _m = MessageBrokerImpl.getInstance();
     }
 
     /**
@@ -48,7 +56,8 @@ public abstract class Subscriber extends RunnableSubPub {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-        //TODO: implement this.
+        _m.subscribeEvent(type, this);
+        _messageToCallback.put(type, callback);
     }
 
     /**
@@ -72,7 +81,8 @@ public abstract class Subscriber extends RunnableSubPub {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-        //TODO: implement this.
+        _m.subscribeBroadcast(type, this);
+        _messageToCallback.put(type, callback);
     }
 
     /**
@@ -86,7 +96,7 @@ public abstract class Subscriber extends RunnableSubPub {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-        //TODO: implement this.
+        _m.complete(e, result);
     }
 
     /**
@@ -105,7 +115,13 @@ public abstract class Subscriber extends RunnableSubPub {
     public final void run() {
         initialize();
         while (!terminated) {
-            System.out.println("NOT IMPLEMENTED!!!"); //TODO: you should delete this line :)
+            try {
+                Message message = _m.awaitMessage(this);
+                _messageToCallback.get(message.getClass()).call(message);
+            } catch (InterruptedException e) {
+                terminate();
+            }
+
         }
     }
 
