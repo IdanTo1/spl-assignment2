@@ -17,7 +17,6 @@ import java.util.TimerTask;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class TimeService extends Publisher {
-    private Timer timer;
     private int _currentTick;
     private final int _maxTicks;
 
@@ -25,13 +24,10 @@ public class TimeService extends Publisher {
         super("TimerService");
         _currentTick = 0;
         _maxTicks = max_ticks;
-        initialize();
     }
 
     @Override
-    protected void initialize() {
-        timer = new Timer();
-    }
+    protected void initialize() { }
 
     @Override
     public void run() {
