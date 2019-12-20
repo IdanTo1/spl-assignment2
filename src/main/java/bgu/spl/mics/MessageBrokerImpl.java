@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import java.util.concurrent.*;
+
 /**
  * The {@link MessageBrokerImpl class is the implementation of the MessageBroker interface.
  * Write your implementation here!
@@ -7,27 +9,33 @@ package bgu.spl.mics;
  * @inv MessageBrokerImpl is a singleton - only one instance of this class can be initialized
  */
 public class MessageBrokerImpl implements MessageBroker {
-	private static MessageBrokerImpl instance = null;
+	private static MessageBrokerImpl _instance = new MessageBrokerImpl();
+	private ConcurrentHashMap<Class<? extends Event>, ConcurrentLinkedQueue<Subscriber>> _eventSubscribers;
+	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedQueue<Subscriber>> _broadcastSubscribers;
+	private ConcurrentHashMap<Event, Future> _eventFutures;
+	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> _subscriberQueues;
+
 	/**
 	 * Retrieves the single instance of this class.
 	 */
 	public static MessageBroker getInstance() {
-		//TODO: Implement this
-		return null;
+		return _instance;
 	}
 
 	private MessageBrokerImpl() {
-		// TODO complete
+		_eventSubscribers = new ConcurrentHashMap<>();
+		_broadcastSubscribers = new ConcurrentHashMap<>();
+		_eventFutures = new ConcurrentHashMap<>();
+		_subscriberQueues = new ConcurrentHashMap<>();
 	}
 
 	@Override
 	/**
-	@pre: none
+	 @pre: none
 	 @post: m's queue will receive Event<T> objects.
 	 */
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
-		// TODO Auto-generated method stub
-
+		_eventSubscribers.get(type).add(m);
 	}
 
 	@Override
@@ -36,8 +44,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: m's queue will receive Broadcast<T> objects.
 	 */
 	public void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
-		// TODO Auto-generated method stub
-
+		_broadcastSubscribers.get(type).add(m);
 	}
 
 	@Override
@@ -46,8 +53,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: e's associated future object isDone() is true
 	 */
 	public <T> void complete(Event<T> e, T result) {
-		// TODO Auto-generated method stub
-
+		_eventFutures.get(e).resolve(result);
 	}
 
 	@Override
@@ -56,19 +62,24 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post all subscribers subscribed to b.getClass() queue's last element will be b.
 	 */
 	public void sendBroadcast(Broadcast b) {
-		// TODO Auto-generated method stub
-
+		for(Subscriber s : _broadcastSubscribers.get(b.getClass())) {
+			_subscriberQueues.get(s).add(b);
+		}
 	}
 
-	
+
 	@Override
 	/**
 	 * @pre none
 	 * @post all subscribers subscribed to e.getClass() queue's last element will be e.
 	 */
 	public <T> Future<T> sendEvent(Event<T> e) {
-		// TODO Auto-generated method stub
-		return null;
+		Subscriber currentSub = _eventSubscribers.get(e.getClass()).poll();
+		Future<T> f = new Future<>();
+		_eventFutures.put(e, f);
+		_subscriberQueues.get(currentSub).add(e);
+		_eventSubscribers.get(e.getClass()).add(currentSub);
+		return f;
 	}
 
 	@Override
@@ -77,8 +88,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: exists queue associated with m
 	 */
 	public void register(Subscriber m) {
-		// TODO Auto-generated method stub
-
+		_subscriberQueues.put(m, new LinkedBlockingQueue<>());
 	}
 
 	@Override
@@ -86,8 +96,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: no queue associated with m
 	 */
 	public void unregister(Subscriber m) {
-		// TODO Auto-generated method stub
-
+		_subscriberQueues.remove(m);
 	}
 
 	@Override
@@ -95,10 +104,9 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: queue's @pre(Head) removed.
 	 */
 	public Message awaitMessage(Subscriber m) throws InterruptedException {
-		// TODO Auto-generated method stub
-		return null;
+		return _subscriberQueues.get(m).poll();
 	}
 
-	
+
 
 }
