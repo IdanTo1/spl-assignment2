@@ -38,7 +38,8 @@ public class Future<T> {
         while (!_done)
             try {
                 this.wait();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                return null;
             }
         return _result;
     }
@@ -79,7 +80,8 @@ public class Future<T> {
         while (!_done)
             try {
                 this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                return null;
             }
         return _result;
     }

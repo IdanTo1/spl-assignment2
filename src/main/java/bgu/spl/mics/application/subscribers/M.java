@@ -120,9 +120,8 @@ public class M extends Subscriber {
         GadgetAvailableObject gadgetAvailableObject = new GadgetAvailableObject(info.getGadget());
         Future<GadgetAvailableObject> gadgetAvailableFuture;
         gadgetAvailableFuture = this.getSimplePublisher().sendEvent(new GadgetAvailableEvent(gadgetAvailableObject));
-        // check whether Q acquired the gadget, and allocate all relevant details. timeout is needed for the case where
-        // Q already terminated, and M is in the middle of processing a mission.
-        gadgetAvailableObject = gadgetAvailableFuture.get(200, TimeUnit.MILLISECONDS); //M and Q uses the same gadgetObject
+        // check whether Q acquired the gadget, and allocate all relevant details.
+        gadgetAvailableObject = gadgetAvailableFuture.get(); //M and Q uses the same gadgetObject
         return gadgetAvailableObject;
     }
 }

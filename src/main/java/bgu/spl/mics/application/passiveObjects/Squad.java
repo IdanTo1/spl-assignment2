@@ -88,7 +88,7 @@ public class Squad {
      * @pre none
      * @post (for serial : serials { getAgents ( [serial]).state == BLOCKED})
      */
-    public boolean getAgents(List<String> serials) {
+    public boolean getAgents(List<String> serials) throws InterruptedException {
         Agent agent;
         // First, make sure all agent exists in the squad, to avoid acquiring and releasing.
         for (String serial : serials) {
@@ -101,10 +101,7 @@ public class Squad {
             agent = _agents.get(serial);
             synchronized (agent) {
                 while (!agent.isAvailable()) {
-                    try {
-                        agent.wait();
-                    } catch (InterruptedException ignored) {
-                    }
+                    agent.wait();
                     agent.acquire();
                 }
             }
