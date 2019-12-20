@@ -101,6 +101,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: no queue associated with m
 	 */
 	public void unregister(Subscriber m) {
+		if(_subscriberQueues.get(m) == null) return;
 		// Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
 		for(Message message : _subscriberQueues.get(m)) {
 			if(message instanceof Event) {
