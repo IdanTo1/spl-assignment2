@@ -110,8 +110,13 @@ public class MessageBrokerImpl implements MessageBroker {
 				_eventFutures.get(message).resolve(null);
 			}
 		}
-		// All we need is to remove the reference to the queue and the garbage collector will do the rest
 		_subscriberQueues.remove(m);
+		for(ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
+			q.remove(m);
+		}
+		for(ConcurrentLinkedQueue<Subscriber> q : _broadcastSubscribers.values()) {
+			q.remove(m);
+		}
 	}
 
 	@Override
@@ -119,7 +124,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: queue's @pre(Head) removed.
 	 */
 	public Message awaitMessage(Subscriber m) throws InterruptedException {
-		return _subscriberQueues.get(m).poll();
+		return _subscriberQueues.get(m).take();
 	}
 
 
