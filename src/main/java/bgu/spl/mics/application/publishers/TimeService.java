@@ -2,6 +2,7 @@ package bgu.spl.mics.application.publishers;
 
 import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.Publisher;
+import bgu.spl.mics.application.messages.TerminationTick;
 import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.Timer;
@@ -47,6 +48,7 @@ public class TimeService extends Publisher {
             }
             _currentTick++;
         }
+        getSimplePublisher().sendBroadcast(new TerminationTick());
     }
 
     public boolean isToTerminate() {
