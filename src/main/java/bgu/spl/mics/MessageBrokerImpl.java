@@ -80,9 +80,9 @@ public class MessageBrokerImpl implements MessageBroker {
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Subscriber currentSub = _eventSubscribers.get(e.getClass()).poll();
 		if(currentSub == null) return null; // Queue returns null if the queue is empty
-		Future<T> f = new Future<>();
 		_subscriberQueues.get(currentSub).add(e);
 		_eventSubscribers.get(e.getClass()).add(currentSub);
+		Future<T> f = new Future<>();
 		_eventFutures.put(e, f);
 		return f;
 	}
