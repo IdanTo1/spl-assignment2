@@ -11,6 +11,8 @@ import java.util.concurrent.*;
  */
 public class MessageBrokerImpl implements MessageBroker {
 	private static MessageBrokerImpl _instance = new MessageBrokerImpl();
+	// All datasets are concurrent or blocking (thread-safe) either way.
+	// Which removes the need to synchronize altogether
 	private ConcurrentHashMap<Class<? extends Event>, ConcurrentLinkedQueue<Subscriber>> _eventSubscribers;
 	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedQueue<Subscriber>> _broadcastSubscribers;
 	private ConcurrentHashMap<Event, Future> _eventFutures;
@@ -63,6 +65,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post all subscribers subscribed to b.getClass() queue's last element will be b.
 	 */
 	public void sendBroadcast(Broadcast b) {
+		// ConcurrentLinkedQueue also implements a thread-safe iterator
 		for(Subscriber s : _broadcastSubscribers.get(b.getClass())) {
 			_subscriberQueues.get(s).add(b);
 		}
@@ -76,6 +79,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 */
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Subscriber currentSub = _eventSubscribers.get(e.getClass()).poll();
+		if(currentSub == null) return null; // Queue returns null if the queue is empty
 		Future<T> f = new Future<>();
 		_subscriberQueues.get(currentSub).add(e);
 		_eventSubscribers.get(e.getClass()).add(currentSub);
