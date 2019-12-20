@@ -42,13 +42,17 @@ public class M extends Subscriber {
             List<String> agentsSerials = info.getSerialAgentsNumbers();
             // ask for agents from Moneypenny
             AgentsAvailableObject agentsAvailableObject = acuireAgents(info, agentsSerials);
-            if (agentsAvailableObject == null) return;
+            if (agentsAvailableObject == null) {
+                terminate();
+                return;
+            }
             List<String> agentNames = agentsAvailableObject.getAgentsNames();
             if (agentNames.get(0).equals("")) return;
             int MoneypennySerial = agentsAvailableObject.getMoneypennySerial();
             // ask for gadget from Q
             GadgetAvailableObject gadgetAvailableObject = acuireGadget(info);
             if (gadgetAvailableObject == null || !gadgetAvailableObject.isGadgetExists()) {
+                if (gadgetAvailableObject == null) terminate();
                 agentsAvailableObject.terminateMission();
                 agentsAvailableObject.notifyAll();
                 return;
