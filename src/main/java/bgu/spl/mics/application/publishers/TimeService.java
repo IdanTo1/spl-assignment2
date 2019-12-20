@@ -49,6 +49,7 @@ public class TimeService extends Publisher {
             _currentTick++;
         }
         getSimplePublisher().sendBroadcast(new TerminationTick());
+        this.notifyAll();
     }
 
     public boolean isToTerminate() {

@@ -33,15 +33,13 @@ public class MI6Runner {
             System.err.println("Invalid num of arguments");
             return;
         }
-        FileReader json;
+        MI6RunnerInfo info;
         try {
-            json = new FileReader(args[INPUT_FILE]);
+            info = parseInput(args[INPUT_FILE]);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Input file not found");
             return;
         }
-        Gson gson = new Gson();
-        MI6RunnerInfo info = gson.fromJson(json, MI6RunnerInfo.class);
         Inventory.getInstance().load(info.getInventory().toArray(new String[]{}));
         List<Agent> tempSquad = new ArrayList<>();
         for (AgentInfo agentInfo : info.getSquad()) {
@@ -51,17 +49,7 @@ public class MI6Runner {
         int subscribersNum = info.getServices().getMoneypenny() + info.getServices().getM() +
                 info.getServices().getIntelligence().size() + 1; // + 1 for Q
         CountDownLatch latch = new CountDownLatch(subscribersNum);
-        ExecutorService e = Executors.newFixedThreadPool(subscribersNum + 1); // + 1 for Time service.
-        e.execute(new Q(latch));
-        for (int i = 0; i < info.getServices().getMoneypenny(); i++) {
-            e.execute(new Moneypenny(i, latch));
-        }
-        for (int i = 0; i < info.getServices().getM(); i++) {
-            e.execute(new M(i, latch));
-        }
-        for (int i = 0; i < info.getServices().getIntelligence().size(); i++) {
-            e.execute(new Intelligence(i, latch, info.getServices().getIntelligence().get(i).getMissions()));
-        }
+        ExecutorService e = createServices(info, subscribersNum, latch);
         TimeService timeService = new TimeService(info.getServices().getTime(), latch);
         e.execute(timeService);
         while (!timeService.isToTerminate()) {
@@ -75,14 +63,36 @@ public class MI6Runner {
             // time is not really needed because all threads will die gracefully, and so random time was chosen
             e.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException ignored) {}
+        // create output files
         try {
             Inventory.getInstance().printToFile(args[INVENTORY_FILE]);
             Diary.getInstance().printToFile(args[DIARY_FILE]);
         } catch (IOException ex) {
+            System.err.println("output file caused an IO exception");
             ex.printStackTrace();
         }
     }
+    private static MI6RunnerInfo parseInput (String inputFile) throws FileNotFoundException {
+        FileReader json;
+        json = new FileReader(inputFile);
+        Gson gson = new Gson();
+        return gson.fromJson(json, MI6RunnerInfo.class);
+    }
 
+    private static ExecutorService createServices (MI6RunnerInfo info, int subscribersNum, CountDownLatch latch) {
+        ExecutorService e = Executors.newFixedThreadPool(subscribersNum + 1); // + 1 for Time service.
+        e.execute(new Q(latch));
+        for (int i = 0; i < info.getServices().getMoneypenny(); i++) {
+            e.execute(new Moneypenny(i, latch));
+        }
+        for (int i = 0; i < info.getServices().getM(); i++) {
+            e.execute(new M(i, latch));
+        }
+        for (int i = 0; i < info.getServices().getIntelligence().size(); i++) {
+            e.execute(new Intelligence(i, latch, info.getServices().getIntelligence().get(i).getMissions()));
+        }
+        return e;
+    }
 //    /**
 //     * a method that create all necessary M instances
 //     *
