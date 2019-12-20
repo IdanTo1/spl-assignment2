@@ -105,8 +105,9 @@ public class Squad {
                         agent.wait();
                     } catch (InterruptedException ignored) {
                     }
-                    agent.acquire();
+
                 }
+                agent.acquire();
             }
         }
         return true;
