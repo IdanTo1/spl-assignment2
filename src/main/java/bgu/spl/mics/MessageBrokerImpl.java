@@ -38,6 +38,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 @post: m's queue will receive Event<T> objects.
 	 */
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
+		if(_eventSubscribers.get(type) == null) _eventSubscribers.put(type, new ConcurrentLinkedQueue<>());
 		_eventSubscribers.get(type).add(m);
 	}
 
@@ -47,6 +48,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: m's queue will receive Broadcast<T> objects.
 	 */
 	public void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
+		if(_broadcastSubscribers.get(type) == null) _broadcastSubscribers.put(type, new ConcurrentLinkedQueue<>());
 		_broadcastSubscribers.get(type).add(m);
 	}
 
