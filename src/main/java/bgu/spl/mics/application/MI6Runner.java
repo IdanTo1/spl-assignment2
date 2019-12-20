@@ -55,7 +55,7 @@ public class MI6Runner {
         while (!timeService.isToTerminate()) {
             try {
                 timeService.wait();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException ignored) { //main thread will never be interrupted
             }
         }
         e.shutdown();
