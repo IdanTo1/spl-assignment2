@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import java.util.Queue;
 import java.util.concurrent.*;
 
 /**
@@ -96,6 +97,13 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: no queue associated with m
 	 */
 	public void unregister(Subscriber m) {
+		// Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
+		for(Object message : _subscriberQueues.get(m)) {
+			if(message instanceof Event) {
+				_eventFutures.get(message).resolve(null);
+			}
+		}
+		// All we need is to remove the reference to the queue and the garbage collector will do the rest
 		_subscriberQueues.remove(m);
 	}
 
