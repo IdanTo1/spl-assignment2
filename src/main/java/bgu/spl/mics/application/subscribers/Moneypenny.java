@@ -39,8 +39,13 @@ public class Moneypenny extends Subscriber {
             List<String> agentsSerials = result.getAgentsSerials();
             java.util.Collections.sort(agentsSerials);
             result.setMoneypennySerial(_serial);
-            if (squad.getAgents(agentsSerials)) {
-                result.setAgentsNames(squad.getAgentsNames(agentsSerials));
+
+            try {
+                if (squad.getAgents(agentsSerials)) {
+                    result.setAgentsNames(squad.getAgentsNames(agentsSerials));
+                }
+            } catch (InterruptedException ex) {
+                complete(e, null);
             }
             complete(e, result);
             while (!result.isSendMission() || !result.isTerminateMission()) {

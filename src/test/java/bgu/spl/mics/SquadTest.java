@@ -38,7 +38,10 @@ public class SquadTest {
 
     @Test
     public void testGetSendAgents() {
-        squad.getAgents(agentsSerials);
+        try {
+            squad.getAgents(agentsSerials);
+        } catch (InterruptedException ignored) {
+        }
         for (Agent agent : agents) {
             assertFalse(agent.isAvailable(), "agent is still available after being acquired");
         }
