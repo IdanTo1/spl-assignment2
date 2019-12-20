@@ -33,6 +33,7 @@ public class M extends Subscriber {
     @Override
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast b) -> _currTime = b.getCurrTime());
+        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
         subscribeEvent(MissionReceivedEvent.class, (MissionReceivedEvent e) -> {
             diary.incrementTotal();
             // get all mission details

@@ -4,6 +4,7 @@ import bgu.spl.mics.Future;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.GadgetAvailableEvent;
 import bgu.spl.mics.application.messages.GadgetAvailableObject;
+import bgu.spl.mics.application.messages.TerminationTickBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 
@@ -30,6 +31,7 @@ public class Q extends Subscriber {
     @Override
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast b) -> _currTime = b.getCurrTime());
+        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
         subscribeEvent(GadgetAvailableEvent.class, (GadgetAvailableEvent e) ->
         {
             GadgetAvailableObject result = e.getObj();
