@@ -77,9 +77,9 @@ public class MessageBrokerImpl implements MessageBroker {
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Subscriber currentSub = _eventSubscribers.get(e.getClass()).poll();
 		Future<T> f = new Future<>();
-		_eventFutures.put(e, f);
 		_subscriberQueues.get(currentSub).add(e);
 		_eventSubscribers.get(e.getClass()).add(currentSub);
+		_eventFutures.put(e, f);
 		return f;
 	}
 
@@ -98,7 +98,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 */
 	public void unregister(Subscriber m) {
 		// Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
-		for(Object message : _subscriberQueues.get(m)) {
+		for(Message message : _subscriberQueues.get(m)) {
 			if(message instanceof Event) {
 				_eventFutures.get(message).resolve(null);
 			}
