@@ -3,6 +3,7 @@ package bgu.spl.mics.application.subscribers;
 import bgu.spl.mics.Subscriber;
 import bgu.spl.mics.application.messages.AgentsAvailableEvent;
 import bgu.spl.mics.application.messages.AgentsAvailableObject;
+import bgu.spl.mics.application.messages.TerminationTickBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Squad;
 
@@ -32,6 +33,7 @@ public class Moneypenny extends Subscriber {
     @Override
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast b) -> _currTime = b.getCurrTime());
+        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
         subscribeEvent(AgentsAvailableEvent.class, (AgentsAvailableEvent e) -> {
             AgentsAvailableObject result = e.getObj();
             List<String> agentsSerials = result.getAgentsSerials();

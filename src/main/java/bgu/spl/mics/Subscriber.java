@@ -116,13 +116,14 @@ public abstract class Subscriber extends RunnableSubPub {
         initialize();
         while (!terminated) {
             try {
+                if (Thread.currentThread().isInterrupted()) Thread.currentThread().interrupt();
                 Message message = _m.awaitMessage(this);
                 _messageToCallback.get(message.getClass()).call(message);
             } catch (InterruptedException e) {
                 terminate();
             }
-
         }
+        _m.unregister(this);
     }
 
 }
