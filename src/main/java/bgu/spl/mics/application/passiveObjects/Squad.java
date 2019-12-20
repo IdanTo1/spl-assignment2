@@ -102,7 +102,6 @@ public class Squad {
             synchronized (agent) {
                 while (!agent.isAvailable()) {
                     agent.wait();
-                    agent.acquire();
                 }
                 agent.acquire();
             }

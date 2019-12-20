@@ -77,12 +77,11 @@ public class Future<T> {
      * @post (isDone () == true || current_time >= start_time + timeout
      */
     public synchronized T get(long timeout, TimeUnit unit) {
-        while (!_done)
-            try {
-                this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
-            } catch (InterruptedException e) {
-                return null;
-            }
+        try {
+            this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
+        } catch (InterruptedException e) {
+            return null;
+        }
         return _result;
     }
 
