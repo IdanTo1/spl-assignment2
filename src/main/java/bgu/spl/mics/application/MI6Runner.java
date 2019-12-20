@@ -93,49 +93,4 @@ public class MI6Runner {
         }
         return e;
     }
-//    /**
-//     * a method that create all necessary M instances
-//     *
-//     * @param numOfMs num of M instances
-//     *
-//     * @return a list of all the created Ms
-//     */
-//    private static List<M> createMs(int numOfMs) {
-//        List<M> Ms = new ArrayList<>();
-//        for (int i = 0; i < numOfMs; i++) {
-//            Ms.add(new M(i));
-//        }
-//        return Ms;
-//    }
-//
-//    /**
-//     * a method that create all necessary Moneypenny instances
-//     *
-//     * @param numOfMoneypennys num of Moneypenny instances
-//     *
-//     * @return a list of all the created Moneypennys
-//     */
-//    private static List<Moneypenny> createMoneypennys(int numOfMoneypennys) {
-//        List<Moneypenny> Moneypennys = new ArrayList<>();
-//        for (int i = 0; i < numOfMoneypennys; i++) {
-//            Moneypennys.add(new Moneypenny(i));
-//        }
-//        return Moneypennys;
-//    }
-//
-//    /**
-//     * a method that create all necessary Intelligence instances
-//     *
-//     * @param intelligences an array of arrays - the outer array represents intelligences, and the inner array holds the
-//     *                      intelligence's missions.
-//     *
-//     * @return a list of all the created Intelligences
-//     */
-//    private static List<Intelligence> createIntelligences(List<List<MissionInfo>> intelligences) {
-//        List<Intelligence> intelligenceObjects = new ArrayList<>();
-//        for (int i = 0; i < intelligences.size(); i++) {
-//            intelligenceObjects.add(new Intelligence(i, intelligences.get(i)));
-//        }
-//        return intelligenceObjects;
-//    }
 }
