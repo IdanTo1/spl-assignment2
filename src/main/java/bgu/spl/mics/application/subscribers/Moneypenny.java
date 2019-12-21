@@ -18,7 +18,6 @@ import java.util.concurrent.CountDownLatch;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class Moneypenny extends Subscriber {
-    private int _currTime = 0;
     private Squad squad;
     private int _serial;
     private CountDownLatch _signalInitialized;
@@ -32,7 +31,6 @@ public class Moneypenny extends Subscriber {
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(TickBroadcast.class, (TickBroadcast b) -> _currTime = b.getCurrTime());
         subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
         subscribeEvent(AgentsAvailableEvent.class, (AgentsAvailableEvent e) -> {
             AgentsAvailableObject result = e.getObj();
