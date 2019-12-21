@@ -32,6 +32,7 @@ public abstract class Subscriber extends RunnableSubPub {
         super(name);
         _messageToCallback = new ConcurrentHashMap<>();
         _m = MessageBrokerImpl.getInstance();
+        _m.register(this);
     }
 
     /**
