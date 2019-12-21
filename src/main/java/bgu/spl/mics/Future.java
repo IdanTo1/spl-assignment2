@@ -76,13 +76,12 @@ public class Future<T> {
      * If time has elapsed, return null.
      * @post (isDone () == true || current_time >= start_time + timeout
      */
-    public T get(long timeout, TimeUnit unit) {
-        while (!_done)
-            try {
-                this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
-            } catch (InterruptedException e) {
-                return null;
-            }
+    public synchronized T get(long timeout, TimeUnit unit) {
+        try {
+            this.wait(TimeUnit.MILLISECONDS.convert(timeout, unit));
+        } catch (InterruptedException e) {
+            return null;
+        }
         return _result;
     }
 
