@@ -58,7 +58,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: e's associated future object isDone() is true
 	 */
 	public <T> void complete(Event<T> e, T result) {
-		_eventFutures.get(e).resolve(result);
+		_eventFutures.remove(e).resolve(result);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class MessageBrokerImpl implements MessageBroker {
 		// Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
 		for(Message message : _subscriberQueues.get(m)) {
 			if(message instanceof Event) {
-				_eventFutures.get(message).resolve(null);
+				_eventFutures.remove(message).resolve(null);
 			}
 		}
 		_subscriberQueues.remove(m);
