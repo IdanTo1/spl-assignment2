@@ -44,6 +44,8 @@ public class Moneypenny extends Subscriber {
                 }
             } catch (InterruptedException ex) {
                 complete(e, null);
+                squad.releaseAgents(agentsSerials);
+                return;
             }
             complete(e, result);
             synchronized (result) {
