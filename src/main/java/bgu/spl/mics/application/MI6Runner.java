@@ -52,19 +52,20 @@ public class MI6Runner {
         ExecutorService e = createServices(info, subscribersNum, latch);
         TimeService timeService = new TimeService(info.getServices().getTime(), latch);
         e.execute(timeService);
-        while (!timeService.isToTerminate()) {
-            try {
-                synchronized (timeService) {
+        synchronized (timeService) {
+            while (!timeService.isToTerminate()) {
+                try {
                     timeService.wait();
+                } catch (InterruptedException ignored) { //main thread will never be interrupted
                 }
-            } catch (InterruptedException ignored) { //main thread will never be interrupted
             }
         }
         e.shutdown();
         try {
             // time is not really needed because all threads will die gracefully, and so random time was chosen
             e.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
         // create output files
         try {
             Inventory.getInstance().printToFile(args[INVENTORY_FILE]);
@@ -74,14 +75,15 @@ public class MI6Runner {
             ex.printStackTrace();
         }
     }
-    private static MI6RunnerInfo parseInput (String inputFile) throws FileNotFoundException {
+
+    private static MI6RunnerInfo parseInput(String inputFile) throws FileNotFoundException {
         FileReader json;
         json = new FileReader(inputFile);
         Gson gson = new Gson();
         return gson.fromJson(json, MI6RunnerInfo.class);
     }
 
-    private static ExecutorService createServices (MI6RunnerInfo info, int subscribersNum, CountDownLatch latch) {
+    private static ExecutorService createServices(MI6RunnerInfo info, int subscribersNum, CountDownLatch latch) {
         ExecutorService e = Executors.newFixedThreadPool(subscribersNum + 1); // + 1 for Time service.
         e.execute(new Q(latch));
         for (int i = 0; i < info.getServices().getMoneypenny(); i++) {
