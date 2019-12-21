@@ -50,7 +50,9 @@ public class Moneypenny extends Subscriber {
             complete(e, result);
             while (!result.isSendMission() || !result.isTerminateMission()) {
                 try {
-                    result.wait();
+                    synchronized (result) {
+                        result.wait();
+                    }
                 } catch (InterruptedException ignored) {
                 }
             }

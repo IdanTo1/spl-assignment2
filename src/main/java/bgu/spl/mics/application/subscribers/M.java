@@ -69,7 +69,9 @@ public class M extends Subscriber {
             }
             // signal Moneypenny she should send the agents.
             agentsAvailableObject.sendMission();
-            agentsAvailableObject.notifyAll();
+            synchronized (agentsAvailableObject) {
+                agentsAvailableObject.notifyAll();
+            }
 
             // generate the mission report with all the allocated data.
             Report report = createReport(missionName, timeIssued, MoneypennySerial, agentsSerials,
