@@ -15,7 +15,7 @@ public class MissionInfo {
     private List<String> serialAgentsNumbers;
     private int duration;
     private String gadget;
-    private String missionName;
+    private String name;
     private int timeExpired;
     private int timeIssued;
 
@@ -23,14 +23,14 @@ public class MissionInfo {
      * Sets the name of the mission.
      */
     public void setMissionName(String missionName) {
-        this.missionName = missionName;
+        this.name = missionName;
     }
 
     /**
      * Retrieves the name of the mission.
      */
     public String getMissionName() {
-        return missionName;
+        return name;
     }
 
     /**
