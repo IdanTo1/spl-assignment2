@@ -37,8 +37,10 @@ public class MessageBrokerImpl implements MessageBroker {
 	 @pre: none
 	 @post: m's queue will receive Event<T> objects.
 	 */
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
-		if(_eventSubscribers.get(type) == null) _eventSubscribers.put(type, new ConcurrentLinkedQueue<>());
+	public  <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
+		synchronized (type) { //Synchronization is needed to avoid replacing an existing queue with a new one needlessly
+			if (_eventSubscribers.get(type) == null) _eventSubscribers.put(type, new ConcurrentLinkedQueue<>());
+		}
 		_eventSubscribers.get(type).add(m);
 	}
 
@@ -48,7 +50,9 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: m's queue will receive Broadcast<T> objects.
 	 */
 	public void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
-		if(_broadcastSubscribers.get(type) == null) _broadcastSubscribers.put(type, new ConcurrentLinkedQueue<>());
+		synchronized (type) { //Synchronization is needed to avoid replacing an existing queue with a new one needlessly
+			if (_broadcastSubscribers.get(type) == null) _broadcastSubscribers.put(type, new ConcurrentLinkedQueue<>());
+		}
 		_broadcastSubscribers.get(type).add(m);
 	}
 
@@ -57,7 +61,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @pre: e's associated future object isDone() is false
 	 * @post: e's associated future object isDone() is true
 	 */
-	public <T> void complete(Event<T> e, T result) {
+	public  <T> void complete(Event<T> e, T result) {
 		_eventFutures.remove(e).resolve(result);
 	}
 
