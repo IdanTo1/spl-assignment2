@@ -54,7 +54,9 @@ public class MI6Runner {
         e.execute(timeService);
         while (!timeService.isToTerminate()) {
             try {
-                timeService.wait();
+                synchronized (timeService) {
+                    timeService.wait();
+                }
             } catch (InterruptedException ignored) { //main thread will never be interrupted
             }
         }
