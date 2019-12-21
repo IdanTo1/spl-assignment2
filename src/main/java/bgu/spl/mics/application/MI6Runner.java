@@ -52,10 +52,12 @@ public class MI6Runner {
         ExecutorService e = createServices(info, subscribersNum, latch);
         TimeService timeService = new TimeService(info.getServices().getTime(), latch);
         e.execute(timeService);
-        while (!timeService.isToTerminate()) {
-            try {
-                timeService.wait();
-            } catch (InterruptedException ignored) { //main thread will never be interrupted
+        synchronized (timeService) {
+            while (!timeService.isToTerminate()) {
+                try {
+                    timeService.wait();
+                } catch (InterruptedException ignored) { //main thread will never be interrupted
+                }
             }
         }
         e.shutdown();
