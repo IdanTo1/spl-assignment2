@@ -53,18 +53,22 @@ public class M extends Subscriber {
             GadgetAvailableObject gadgetAvailableObject = acquireGadget(info);
             if (gadgetAvailableObject == null || !gadgetAvailableObject.isGadgetExists()) {
                 if (gadgetAvailableObject == null) terminate();
-                agentsAvailableObject.terminateMission();
-                agentsAvailableObject.notifyAll();
-                return;
+                synchronized (agentsAvailableObject) {
+                    agentsAvailableObject.terminateMission();
+                    agentsAvailableObject.notifyAll();
+                    return;
+                }
             }
             String gadget = gadgetAvailableObject.getGadget();
             int Qtime = gadgetAvailableObject.getQtime();
             // check if mission time expired
             if (_currTime > info.getTimeExpired()) {
                 // signal Moneypenny she should release the agents.
-                agentsAvailableObject.terminateMission();
-                agentsAvailableObject.notifyAll();
-                return;
+                synchronized (agentsAvailableObject) {
+                    agentsAvailableObject.terminateMission();
+                    agentsAvailableObject.notifyAll();
+                    return;
+                }
             }
             // signal Moneypenny she should send the agents.
             agentsAvailableObject.sendMission();
