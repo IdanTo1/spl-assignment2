@@ -34,7 +34,8 @@ public class Intelligence extends Subscriber {
     @Override
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast b) -> {
-            while (_missions.peek() != null && b.getCurrTime() == _missions.peek().getTimeIssued())
+            int currTime = b.getCurrTime();
+            while (_missions.peek() != null && currTime == _missions.peek().getTimeIssued())
                 getSimplePublisher().sendEvent(new MissionReceivedEvent(_missions.poll()));
         });
         subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
