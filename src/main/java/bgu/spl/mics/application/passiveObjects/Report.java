@@ -9,15 +9,15 @@ import java.util.List;
  * You may add ONLY private fields and methods to this class.
  */
 public class Report {
-    private String _missionName;
-    private int _M;
-    private List<String> _agentsSerialNumbers;
-    private String _gadgetName;
-    private int _timeIssued;
-    private int _timeCreated;
-    private int _MoneyPenny;
-    private List<String> _agentsNames;
-    private int _QTime;
+    private String missionName;
+    private int m;
+    private int moneypenny;
+    private List<String> agentsSerialNumbers;
+    private List<String> agentsNames;
+    private String gadgetName;
+    private int timeIssued;
+    private int timeCreated;
+    private int qTime;
 
     public Report() {
         // Initialization isn't needed because M sets all the variables upon creation
@@ -27,42 +27,42 @@ public class Report {
      * Retrieves the mission name.
      */
     public String getMissionName() {
-        return _missionName;
+        return missionName;
     }
 
     /**
      * Sets the mission name.
      */
     public void setMissionName(String missionName) {
-        _missionName = missionName;
+        this.missionName = missionName;
     }
 
     /**
      * Retrieves the M's id.
      */
     public int getM() {
-        return _M;
+        return m;
     }
 
     /**
      * Sets the M's id.
      */
     public void setM(int m) {
-        _M = m;
+        this.m = m;
     }
 
     /**
      * Retrieves the Moneypenny's id.
      */
     public int getMoneypenny() {
-        return _MoneyPenny;
+        return moneypenny;
     }
 
     /**
      * Sets the Moneypenny's id.
      */
     public void setMoneypenny(int moneypenny) {
-        _MoneyPenny = moneypenny;
+        this.moneypenny = moneypenny;
     }
 
     /**
@@ -72,7 +72,7 @@ public class Report {
      * @return The serial numbers of the agents.
      */
     public List<String> getAgentsSerialNumbers() {
-        return _agentsSerialNumbers;
+        return agentsSerialNumbers;
     }
 
     /**
@@ -80,7 +80,7 @@ public class Report {
      */
     public void setAgentsSerialNumbers(List<String> agentsSerialNumbers) {
         // Shallow copy is fine here because the list doesn't change over time
-        _agentsSerialNumbers = agentsSerialNumbers;
+        this.agentsSerialNumbers = agentsSerialNumbers;
     }
 
     /**
@@ -90,14 +90,14 @@ public class Report {
      * @return The agents names.
      */
     public List<String> getAgentsNames() {
-        return _agentsNames;
+        return agentsNames;
     }
 
     /**
      * Sets the agents names.
      */
     public void setAgentsNames(List<String> agentsNames) {
-        _agentsNames = agentsNames;
+        this.agentsNames = agentsNames;
     }
 
     /**
@@ -107,55 +107,55 @@ public class Report {
      * @return the name of the gadget.
      */
     public String getGadgetName() {
-        return _gadgetName;
+        return gadgetName;
     }
 
     /**
      * Sets the name of the gadget.
      */
     public void setGadgetName(String gadgetName) {
-        _gadgetName = gadgetName;
+        this.gadgetName = gadgetName;
     }
 
     /**
      * Retrieves the time-tick in which Q Received the GadgetAvailableEvent for that mission.
      */
     public int getQTime() {
-        return _QTime;
+        return qTime;
     }
 
     /**
      * Sets the time-tick in which Q Received the GadgetAvailableEvent for that mission.
      */
     public void setQTime(int qTime) {
-        _QTime = qTime;
+        this.qTime = qTime;
     }
 
     /**
      * Retrieves the time when the mission was sent by an Intelligence Publisher.
      */
     public int getTimeIssued() {
-        return _timeIssued;
+        return timeIssued;
     }
 
     /**
      * Sets the time when the mission was sent by an Intelligence Publisher.
      */
     public void setTimeIssued(int timeIssued) {
-        _timeIssued = timeIssued;
+        this.timeIssued = timeIssued;
     }
 
     /**
      * Retrieves the time-tick when the report has been created.
      */
     public int getTimeCreated() {
-        return _timeCreated;
+        return timeCreated;
     }
 
     /**
      * Sets the time-tick when the report has been created.
      */
     public void setTimeCreated(int timeCreated) {
-        _timeCreated = timeCreated;
+        this.timeCreated = timeCreated;
     }
 }
