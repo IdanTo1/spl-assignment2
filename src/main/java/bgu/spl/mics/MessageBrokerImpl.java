@@ -128,7 +128,13 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: queue's @pre(Head) removed.
 	 */
 	public Message awaitMessage(Subscriber m) throws InterruptedException {
-		return _subscriberQueues.get(m).take();
+		Message msgToHandle = null;
+		BlockingQueue<Message> subscriberQueue = _subscriberQueues.get(m);
+		while (msgToHandle == null) {
+			if (Thread.currentThread().isInterrupted()) throw new InterruptedException();
+			msgToHandle = subscriberQueue.poll(500, TimeUnit.MILLISECONDS); // some random timeout, maybe other is needed
+		}
+		return msgToHandle;
 	}
 
 
