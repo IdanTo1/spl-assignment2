@@ -48,12 +48,12 @@ public class Moneypenny extends Subscriber {
                 complete(e, null);
             }
             complete(e, result);
-            while (!result.isSendMission() || !result.isTerminateMission()) {
-                try {
-                    synchronized (result) {
+            synchronized (result) {
+                while (!result.isSendMission() || !result.isTerminateMission()) {
+                    try {
                         result.wait();
+                    } catch (InterruptedException ignored) {
                     }
-                } catch (InterruptedException ignored) {
                 }
             }
             if (result.isSendMission()) squad.sendAgents(agentsSerials, result.getMissionDuration());
