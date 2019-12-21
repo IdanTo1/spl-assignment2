@@ -120,10 +120,14 @@ public class MessageBrokerImpl implements MessageBroker {
 		}
 		_subscriberQueues.remove(m);
 		for(ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
-			q.remove(m);
+			synchronized (q) {
+				q.remove(m);
+			}
 		}
 		for(ConcurrentLinkedQueue<Subscriber> q : _broadcastSubscribers.values()) {
-			q.remove(m);
+			synchronized (q) {
+				q.remove(m);
+			}
 		}
 	}
 
