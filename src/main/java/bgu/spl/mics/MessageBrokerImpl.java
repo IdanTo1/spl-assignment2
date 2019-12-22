@@ -91,9 +91,9 @@ public class MessageBrokerImpl implements MessageBroker {
 			if(currentSub == null) return null;
 			q.add(currentSub);
 		}
-		_subscriberQueues.get(currentSub).add(e);
 		Future<T> f = new Future<>();
 		_eventFutures.put(e, f);
+		_subscriberQueues.get(currentSub).add(e);
 		return f;
 	}
 
