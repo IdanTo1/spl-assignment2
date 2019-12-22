@@ -113,7 +113,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	public void unregister(Subscriber m) {
 		if(_subscriberQueues.get(m) == null) return;
 		// Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
-		BlockingQueue<Message> subscriberQueue = _subscriberQueues.remove(m);
+		BlockingQueue<Message> subscriberQueue = _subscriberQueues.get(m);
 		for(Message message : subscriberQueue) {
 			if(message instanceof Event) {
 				_eventFutures.remove(message).resolve(null);
