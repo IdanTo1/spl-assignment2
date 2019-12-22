@@ -119,7 +119,6 @@ public class MessageBrokerImpl implements MessageBroker {
 				_eventFutures.remove(message).resolve(null);
 			}
 		}
-		_subscriberQueues.remove(m);
 		for(ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
 			synchronized (q) {
 				q.remove(m);
@@ -130,6 +129,7 @@ public class MessageBrokerImpl implements MessageBroker {
 				q.remove(m);
 			}
 		}
+		_subscriberQueues.remove(m);
 	}
 
 	@Override
