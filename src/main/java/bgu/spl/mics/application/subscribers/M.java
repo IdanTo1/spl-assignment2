@@ -47,7 +47,7 @@ public class M extends Subscriber {
                 return;
             }
             List<String> agentNames = agentsAvailableObject.getAgentsNames();
-            if (agentNames.get(0).equals("")) return;
+            if (agentNames == null) return; // If the agents weren't initialized we return
             int MoneypennySerial = agentsAvailableObject.getMoneypennySerial();
             // ask for gadget from Q
             GadgetAvailableObject gadgetAvailableObject = acquireGadget(info);
