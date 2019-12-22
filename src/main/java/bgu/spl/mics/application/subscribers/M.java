@@ -118,6 +118,7 @@ public class M extends Subscriber {
         agentsAvailableFuture = this.getSimplePublisher().sendEvent(new AgentsAvailableEvent(agentsAvailableObject));
         // check whether Moneypenny acquired the agents, and allocate all relevant details. timeout is needed for the
         // case where all Moneypennys already terminated, and M is in the middle of processing a mission.
+        if(agentsAvailableFuture == null) return null;
         agentsAvailableObject = agentsAvailableFuture.get(); // M and Moneypenny uses the same agentsObject
         return agentsAvailableObject;
     }
@@ -127,6 +128,7 @@ public class M extends Subscriber {
         Future<GadgetAvailableObject> gadgetAvailableFuture;
         gadgetAvailableFuture = this.getSimplePublisher().sendEvent(new GadgetAvailableEvent(gadgetAvailableObject));
         // check whether Q acquired the gadget, and allocate all relevant details.
+        if(gadgetAvailableFuture == null) return null;
         gadgetAvailableObject = gadgetAvailableFuture.get(); //M and Q uses the same gadgetObject
         return gadgetAvailableObject;
     }
