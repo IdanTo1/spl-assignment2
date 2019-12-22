@@ -9,7 +9,6 @@ import bgu.spl.mics.application.passiveObjects.Report;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 /**
  * M handles ReadyEvent - fills a report and sends agents to mission.
@@ -42,7 +41,7 @@ public class M extends Subscriber {
             int timeIssued = info.getTimeIssued();
             List<String> agentsSerials = info.getSerialAgentsNumbers();
             // ask for agents from Moneypenny
-            AgentsAvailableObject agentsAvailableObject = acuireAgents(info, agentsSerials);
+            AgentsAvailableObject agentsAvailableObject = acquireAgents(info, agentsSerials);
             if (agentsAvailableObject == null) {
                 terminate();
                 return;
@@ -51,21 +50,25 @@ public class M extends Subscriber {
             if (agentNames.get(0).equals("")) return;
             int MoneypennySerial = agentsAvailableObject.getMoneypennySerial();
             // ask for gadget from Q
-            GadgetAvailableObject gadgetAvailableObject = acuireGadget(info);
+            GadgetAvailableObject gadgetAvailableObject = acquireGadget(info);
             if (gadgetAvailableObject == null || !gadgetAvailableObject.isGadgetExists()) {
                 if (gadgetAvailableObject == null) terminate();
-                agentsAvailableObject.terminateMission();
-                agentsAvailableObject.notifyAll();
-                return;
+                synchronized (agentsAvailableObject) {
+                    agentsAvailableObject.terminateMission();
+                    agentsAvailableObject.notifyAll();
+                    return;
+                }
             }
             String gadget = gadgetAvailableObject.getGadget();
             int Qtime = gadgetAvailableObject.getQtime();
             // check if mission time expired
             if (_currTime > info.getTimeExpired()) {
                 // signal Moneypenny she should release the agents.
-                agentsAvailableObject.terminateMission();
-                agentsAvailableObject.notifyAll();
-                return;
+                synchronized (agentsAvailableObject) {
+                    agentsAvailableObject.terminateMission();
+                    agentsAvailableObject.notifyAll();
+                    return;
+                }
             }
             // signal Moneypenny she should send the agents.
             agentsAvailableObject.sendMission();
@@ -109,21 +112,23 @@ public class M extends Subscriber {
         report.setQTime(Qtime);
         return report;
     }
-    private AgentsAvailableObject acuireAgents(MissionInfo info, List<String> agentsSerials) {
+    private AgentsAvailableObject acquireAgents(MissionInfo info, List<String> agentsSerials) {
         AgentsAvailableObject agentsAvailableObject = new AgentsAvailableObject(agentsSerials, info.getDuration());
         Future<AgentsAvailableObject> agentsAvailableFuture;
         agentsAvailableFuture = this.getSimplePublisher().sendEvent(new AgentsAvailableEvent(agentsAvailableObject));
         // check whether Moneypenny acquired the agents, and allocate all relevant details. timeout is needed for the
         // case where all Moneypennys already terminated, and M is in the middle of processing a mission.
+        if(agentsAvailableFuture == null) return null;
         agentsAvailableObject = agentsAvailableFuture.get(); // M and Moneypenny uses the same agentsObject
         return agentsAvailableObject;
     }
 
-    private GadgetAvailableObject acuireGadget(MissionInfo info) {
+    private GadgetAvailableObject acquireGadget(MissionInfo info) {
         GadgetAvailableObject gadgetAvailableObject = new GadgetAvailableObject(info.getGadget());
         Future<GadgetAvailableObject> gadgetAvailableFuture;
         gadgetAvailableFuture = this.getSimplePublisher().sendEvent(new GadgetAvailableEvent(gadgetAvailableObject));
         // check whether Q acquired the gadget, and allocate all relevant details.
+        if(gadgetAvailableFuture == null) return null;
         gadgetAvailableObject = gadgetAvailableFuture.get(); //M and Q uses the same gadgetObject
         return gadgetAvailableObject;
     }

@@ -77,7 +77,12 @@ public class MessageBrokerTest {
         Event<Integer> e = new IntEvent(1);
         Future<Integer> f = m.sendEvent(e);
         assertFalse(f.isDone(), "Future object starts completed");
-        m.complete(e, 2);
+        Event<Integer> msg = null;
+        try {
+            msg = (Event<Integer>) m.awaitMessage(s1);
+        } catch (InterruptedException ignored) {
+        }
+        m.complete(msg, 2);
         assertTrue(f.isDone(), "Future object doesn't complete");
         assertEquals(2, (int) f.get(), "Future doesn't return the result");
     }
@@ -110,5 +115,9 @@ public class MessageBrokerTest {
         });
         th.start();
         th.interrupt();
+        try {
+            th.join();
+        } catch (InterruptedException ignored) {
+        }
     }
 }

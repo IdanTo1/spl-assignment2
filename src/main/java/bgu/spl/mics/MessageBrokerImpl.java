@@ -37,8 +37,10 @@ public class MessageBrokerImpl implements MessageBroker {
 	 @pre: none
 	 @post: m's queue will receive Event<T> objects.
 	 */
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
-		if(_eventSubscribers.get(type) == null) _eventSubscribers.put(type, new ConcurrentLinkedQueue<>());
+	public  <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
+		synchronized (type) { //Synchronization is needed to avoid replacing an existing queue with a new one needlessly
+			if (_eventSubscribers.get(type) == null) _eventSubscribers.put(type, new ConcurrentLinkedQueue<>());
+		}
 		_eventSubscribers.get(type).add(m);
 	}
 
@@ -48,7 +50,9 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post: m's queue will receive Broadcast<T> objects.
 	 */
 	public void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
-		if(_broadcastSubscribers.get(type) == null) _broadcastSubscribers.put(type, new ConcurrentLinkedQueue<>());
+		synchronized (type) { //Synchronization is needed to avoid replacing an existing queue with a new one needlessly
+			if (_broadcastSubscribers.get(type) == null) _broadcastSubscribers.put(type, new ConcurrentLinkedQueue<>());
+		}
 		_broadcastSubscribers.get(type).add(m);
 	}
 
@@ -57,8 +61,8 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @pre: e's associated future object isDone() is false
 	 * @post: e's associated future object isDone() is true
 	 */
-	public <T> void complete(Event<T> e, T result) {
-		_eventFutures.get(e).resolve(result);
+	public  <T> void complete(Event<T> e, T result) {
+		_eventFutures.remove(e).resolve(result);
 	}
 
 	@Override
@@ -80,10 +84,14 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * @post all subscribers subscribed to e.getClass() queue's last element will be e.
 	 */
 	public <T> Future<T> sendEvent(Event<T> e) {
-		Subscriber currentSub = _eventSubscribers.get(e.getClass()).poll();
-		if(currentSub == null) return null; // Queue returns null if the queue is empty
+		Subscriber currentSub = null;
+		Queue<Subscriber> q = _eventSubscribers.get(e.getClass());
+		synchronized (q) {
+			currentSub = q.poll();
+			if(currentSub == null) return null;
+			q.add(currentSub);
+		}
 		_subscriberQueues.get(currentSub).add(e);
-		_eventSubscribers.get(e.getClass()).add(currentSub);
 		Future<T> f = new Future<>();
 		_eventFutures.put(e, f);
 		return f;
@@ -105,17 +113,22 @@ public class MessageBrokerImpl implements MessageBroker {
 	public void unregister(Subscriber m) {
 		if(_subscriberQueues.get(m) == null) return;
 		// Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
-		for(Message message : _subscriberQueues.get(m)) {
+		BlockingQueue<Message> subscriberQueue = _subscriberQueues.remove(m);
+		for(Message message : subscriberQueue) {
 			if(message instanceof Event) {
-				_eventFutures.get(message).resolve(null);
+				_eventFutures.remove(message).resolve(null);
 			}
 		}
 		_subscriberQueues.remove(m);
 		for(ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
-			q.remove(m);
+			synchronized (q) {
+				q.remove(m);
+			}
 		}
 		for(ConcurrentLinkedQueue<Subscriber> q : _broadcastSubscribers.values()) {
-			q.remove(m);
+			synchronized (q) {
+				q.remove(m);
+			}
 		}
 	}
 
