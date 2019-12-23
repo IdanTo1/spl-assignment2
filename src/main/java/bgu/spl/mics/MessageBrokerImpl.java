@@ -113,6 +113,10 @@ public class MessageBrokerImpl implements MessageBroker {
 	public void unregister(Subscriber m) {
 		if(_subscriberQueues.get(m) == null) return;
 		// Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
+		// because of Concurrency, order is very important here.
+		// first we'll unsubscribe the subscriber from all events and broadcasts.
+		// then we'll remove the Subscribers queue (so no one will have access to it.
+		// and only then we'll resolve all events in the queue.
 		BlockingQueue<Message> subscriberQueue = _subscriberQueues.get(m);
 		for(ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
 			synchronized (q) {
@@ -124,12 +128,12 @@ public class MessageBrokerImpl implements MessageBroker {
 				q.remove(m);
 			}
 		}
+		_subscriberQueues.remove(m);
 		for(Message message : subscriberQueue) {
 			if(message instanceof Event) {
 				_eventFutures.remove(message).resolve(null);
 			}
 		}
-		_subscriberQueues.remove(m);
 	}
 
 	@Override
