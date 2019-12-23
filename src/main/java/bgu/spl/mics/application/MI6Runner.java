@@ -1,5 +1,7 @@
 package bgu.spl.mics.application;
 
+import bgu.spl.mics.MessageBroker;
+import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.passiveObjects.MI6RunnerInfo.AgentInfo;
 import bgu.spl.mics.application.passiveObjects.MI6RunnerInfo.MI6RunnerInfo;
@@ -66,6 +68,11 @@ public class MI6Runner {
             e.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException ignored) {
         }
+        // for debug purpose only- should be deleted.
+        MessageBroker m = MessageBrokerImpl.getInstance();
+        m.printAll();
+
+
         // create output files
         try {
             Inventory.getInstance().printToFile(args[INVENTORY_FILE]);

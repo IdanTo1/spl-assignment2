@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.*;
 
@@ -139,7 +140,29 @@ public class MessageBrokerImpl implements MessageBroker {
 	public Message awaitMessage(Subscriber m) throws InterruptedException {
 		return _subscriberQueues.get(m).take();
 	}
-
-
-
+	/*
+	private ConcurrentHashMap<Class<? extends Event>, ConcurrentLinkedQueue<Subscriber>> _eventSubscribers;
+	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedQueue<Subscriber>> _broadcastSubscribers;
+	private ConcurrentHashMap<Event, Future> _eventFutures;
+	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> _subscriberQueues;
+	*/
+	@Override
+	public void printAll() {
+		System.out.println("event Subscribers hashMap:");
+		System.out.println("\tsize: " + _eventSubscribers.size());
+		System.out.println("\tMembers:");
+		for (ConcurrentLinkedQueue<Subscriber> q: _eventSubscribers.values()) {
+			System.out.println("\t\t"+q.toString());
+		}
+		System.out.println("broadcast Subscribers hashMap:");
+		System.out.println("\tsize: " + _broadcastSubscribers.size());
+		System.out.println("\tMembers:");
+		for (ConcurrentLinkedQueue<Subscriber> q: _broadcastSubscribers.values()) {
+			System.out.println("\t\t"+q.toString());
+		}
+		System.out.println("event Future hashMap:");
+		System.out.println("\tsize: " + _eventFutures.size());
+		System.out.println("Subscribers' queues hashMap:");
+		System.out.println("\tsize: " + _subscriberQueues.size());
+	}
 }
