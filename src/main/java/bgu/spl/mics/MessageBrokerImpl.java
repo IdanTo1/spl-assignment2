@@ -94,21 +94,19 @@ public class MessageBrokerImpl implements MessageBroker {
             q.add(currentSub);
         }
         Future<T> f = new Future<>();
-        BlockingQueue<Message> currentSubQueue = _subscriberQueues.get(currentSub);
         try {
-            synchronized (currentSubQueue) {
+            synchronized (_subscriberQueues.get(currentSub)) {
                 /*
                  * if the queue was deleted after subscriber was chosen, that means we are in the middle of
                  * termination process. so there is no point of registering this event to other subscriber. (it is going to
                  * be deleted as well), so we'll just return empty future, without adding it to the eventsFutures map.
                  */
+				_subscriberQueues.get(currentSub).add(e);
 				_eventFutures.put(e, f);
-                currentSubQueue.add(e);
             }
             return f;
         } catch (NullPointerException ex) {
-        	if(_eventFutures.get(e) != null) complete(e, null);
-            else f.resolve(null);
+        	f.resolve(null);
             return f;
         }
     }
