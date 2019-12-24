@@ -102,7 +102,7 @@ public class MessageBrokerImpl implements MessageBroker {
                  * termination process. so there is no point of registering this event to other subscriber. (it is going to
                  * be deleted as well), so we'll just return empty future, without adding it to the eventsFutures map.
                  */
-                _eventFutures.put(e, f);
+				_eventFutures.put(e, f);
                 currentSubQueue.add(e);
             }
             return f;
@@ -153,7 +153,6 @@ public class MessageBrokerImpl implements MessageBroker {
                 }
             }
         }
-		System.out.println(_eventFutures.size());
     }
 
     @Override
