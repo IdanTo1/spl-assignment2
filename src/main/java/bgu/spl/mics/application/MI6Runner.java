@@ -4,6 +4,7 @@ import bgu.spl.mics.MessageBroker;
 import bgu.spl.mics.MessageBrokerImpl;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.passiveObjects.MI6RunnerInfo.AgentInfo;
+import bgu.spl.mics.application.passiveObjects.MI6RunnerInfo.IntelligenceInfo;
 import bgu.spl.mics.application.passiveObjects.MI6RunnerInfo.MI6RunnerInfo;
 import bgu.spl.mics.application.publishers.TimeService;
 import bgu.spl.mics.application.subscribers.Intelligence;
@@ -71,8 +72,16 @@ public class MI6Runner {
         // for debug purpose only- should be deleted.
         MessageBroker m = MessageBrokerImpl.getInstance();
         m.printAll();
-
-
+        Diary.getInstance().getTotal();
+        int missionTotal = 0;
+        for (IntelligenceInfo intel : info.getServices().getIntelligence()) {
+            missionTotal += intel.getMissions().size();
+        }
+        int diaryTotal = Diary.getInstance().getTotal();
+        if (missionTotal != diaryTotal) {
+            System.err.println("number of missions = " + missionTotal +
+                    " but number of missions registered in diary = " + diaryTotal);
+        }
         // create output files
         try {
             Inventory.getInstance().printToFile(args[INVENTORY_FILE]);
