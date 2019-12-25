@@ -1,0 +1,28 @@
+{
+  "inventory": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "services": {
+    "M": 0,
+    "Moneypenny": 1,
+    "time": 25
+  },
+  "squad": [
+    {
+      "name": "James Bond",
+      "serialNumber": "007"
+    },
+    {
+      "name": "Alec Trevelyan",
+      "serialNumber": "006"
+    },
+    {
+      "name": "bla",
+      "serialNumber": "001"
+    }
+  ]
+}
+
