@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 
 import java.util.Map;
+
 import bgu.spl.mics.application.messages.MissionReceivedEvent;
 
 import java.util.Queue;
@@ -102,12 +103,12 @@ public class MessageBrokerImpl implements MessageBroker {
                  * termination process. so there is no point of registering this event to other subscriber. (it is going to
                  * be deleted as well), so we'll just return empty future, without adding it to the eventsFutures map.
                  */
-				_subscriberQueues.get(currentSub).add(e);
-				_eventFutures.put(e, f);
+                _subscriberQueues.get(currentSub).add(e);
+                _eventFutures.put(e, f);
             }
             return f;
         } catch (NullPointerException ex) {
-        	f.resolve(null);
+            f.resolve(null);
             return f;
         }
     }
@@ -128,11 +129,11 @@ public class MessageBrokerImpl implements MessageBroker {
     public void unregister(Subscriber m) {
         if (_subscriberQueues.get(m) == null) return;
         /*
-        * Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
-        * because of Concurrency, order is very important here.
-        * first we'll unsubscribe the subscriber from all events and broadcasts.
-        * then we'll remove the Subscribers queue (so no one will have access to it.
-        * and only then we'll resolve all events in the queue.
+         * Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
+         * because of Concurrency, order is very important here.
+         * first we'll unsubscribe the subscriber from all events and broadcasts.
+         * then we'll remove the Subscribers queue (so no one will have access to it.
+         * and only then we'll resolve all events in the queue.
          */
         for (ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
             synchronized (q) {
@@ -161,31 +162,26 @@ public class MessageBrokerImpl implements MessageBroker {
     public Message awaitMessage(Subscriber m) throws InterruptedException {
         return _subscriberQueues.get(m).take();
     }
-	/*
-	private ConcurrentHashMap<Class<? extends Event>, ConcurrentLinkedQueue<Subscriber>> _eventSubscribers;
-	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedQueue<Subscriber>> _broadcastSubscribers;
-	private ConcurrentHashMap<Event, Future> _eventFutures;
-	private ConcurrentHashMap<Subscriber, BlockingQueue<Message>> _subscriberQueues;
-	*/
-	@Override
-	public void printAll() {
-		System.out.println("event Subscribers hashMap:");
-		System.out.println("\tsize: " + _eventSubscribers.size());
-		System.out.println("\tMembers:");
-		for (ConcurrentLinkedQueue<Subscriber> q: _eventSubscribers.values()) {
-			System.out.println("\t\t"+q.toString());
-		}
-		System.out.println("broadcast Subscribers hashMap:");
-		System.out.println("\tsize: " + _broadcastSubscribers.size());
-		System.out.println("\tMembers:");
-		for (ConcurrentLinkedQueue<Subscriber> q: _broadcastSubscribers.values()) {
-			System.out.println("\t\t"+q.toString());
-		}
-		System.out.println("event Future hashMap:");
-		System.out.println("\tsize: " + _eventFutures.size());
-		System.out.println("Subscribers' queues hashMap:");
-		System.out.println("\tsize: " + _subscriberQueues.size());
-	}
+
+    @Override
+    public void printAll() {
+        System.out.println("event Subscribers hashMap:");
+        System.out.println("\tsize: " + _eventSubscribers.size());
+        System.out.println("\tMembers:");
+        for (ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
+            System.out.println("\t\t" + q.toString());
+        }
+        System.out.println("broadcast Subscribers hashMap:");
+        System.out.println("\tsize: " + _broadcastSubscribers.size());
+        System.out.println("\tMembers:");
+        for (ConcurrentLinkedQueue<Subscriber> q : _broadcastSubscribers.values()) {
+            System.out.println("\t\t" + q.toString());
+        }
+        System.out.println("event Future hashMap:");
+        System.out.println("\tsize: " + _eventFutures.size());
+        System.out.println("Subscribers' queues hashMap:");
+        System.out.println("\tsize: " + _subscriberQueues.size());
+    }
 
 
 }

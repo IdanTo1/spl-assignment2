@@ -1,0 +1,64 @@
+{
+  "inventory": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "services": {
+    "M": 1,
+    "Moneypenny": 0,
+    "intelligence": [
+      {
+        "missions": [
+          {
+            "serialAgentsNumbers": [
+              "006"
+            ],
+            "duration": 7,
+            "gadget": "0",
+            "missionName": "0",
+            "timeExpired": 15,
+            "timeIssued": 3
+          },
+          {
+            "serialAgentsNumbers": [
+              "007"
+            ],
+            "duration": 3,
+            "gadget": "1",
+            "missionName": "1",
+            "timeExpired": 12,
+            "timeIssued": 3
+          },
+          {
+            "serialAgentsNumbers": [
+              "001"
+            ],
+            "duration": 8,
+            "gadget": "2",
+            "missionName": "2",
+            "timeExpired": 20,
+            "timeIssued": 11
+          }
+        ]
+      }
+    ],
+    "time": 25
+  },
+  "squad": [
+    {
+      "name": "James Bond",
+      "serialNumber": "007"
+    },
+    {
+      "name": "Alec Trevelyan",
+      "serialNumber": "006"
+    },
+    {
+      "name": "bla",
+      "serialNumber": "001"
+    }
+  ]
+}
+
