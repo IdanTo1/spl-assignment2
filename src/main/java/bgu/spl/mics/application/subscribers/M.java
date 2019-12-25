@@ -44,6 +44,7 @@ public class M extends Subscriber {
             AgentsAvailableObject agentsAvailableObject = acquireAgents(info, agentsSerials);
             if (agentsAvailableObject == null) {
                 terminate();
+                complete(e, null);
                 return;
             }
             List<String> agentNames = agentsAvailableObject.getAgentsNames();
@@ -56,6 +57,7 @@ public class M extends Subscriber {
                 synchronized (agentsAvailableObject) {
                     agentsAvailableObject.terminateMission();
                     agentsAvailableObject.notifyAll();
+                    complete(e, null);
                     return;
                 }
             }
@@ -67,6 +69,7 @@ public class M extends Subscriber {
                 synchronized (agentsAvailableObject) {
                     agentsAvailableObject.terminateMission();
                     agentsAvailableObject.notifyAll();
+                    complete(e, null);
                     return;
                 }
             }
