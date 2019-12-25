@@ -48,7 +48,12 @@ public class M extends Subscriber {
                 return;
             }
             List<String> agentNames = agentsAvailableObject.getAgentsNames();
-            if (agentNames == null) return; // If the agents weren't initialized we return
+            // If the agents weren't initialized, meaning Moneypenny couldn't find them in the squad,
+            // we'll return, and MoneyPenny knows not to wait to execute mission.
+            if (agentNames == null) {
+                complete(e, null);
+                return;
+            }
             int MoneypennySerial = agentsAvailableObject.getMoneypennySerial();
             // ask for gadget from Q
             GadgetAvailableObject gadgetAvailableObject = acquireGadget(info);

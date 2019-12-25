@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Only this type of Subscriber can access the squad.
- * Three are several Moneypenny-instances - each of them holds a unique serial number that will later be printed on the report.
+ * Only this type of Subscriber can access the squad. Three are several Moneypenny-instances - each of them holds a
+ * unique serial number that will later be printed on the report.
  * <p>
- * You can add private fields and public methods to this class.
- * You MAY change constructor signatures and even add new public constructors.
+ * You can add private fields and public methods to this class. You MAY change constructor signatures and even add new
+ * public constructors.
  */
 public class Moneypenny extends Subscriber {
     private Squad squad;
@@ -31,7 +31,7 @@ public class Moneypenny extends Subscriber {
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
+        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b) -> terminate());
         subscribeEvent(AgentsAvailableEvent.class, (AgentsAvailableEvent e) -> {
             AgentsAvailableObject result = e.getObj();
             List<String> agentsSerials = result.getAgentsSerials();
@@ -41,7 +41,7 @@ public class Moneypenny extends Subscriber {
             try {
                 if (squad.getAgents(agentsSerials)) {
                     result.setAgentsNames(squad.getAgentsNames(agentsSerials));
-                }
+                } else return; // if agents don't exists. mission will never be executed, so no reason to wait.
             } catch (InterruptedException ex) {
                 complete(e, null);
                 squad.releaseAgents(agentsSerials);
