@@ -50,7 +50,7 @@ public class MI6RunnerNoQ {
         }
         Squad.getInstance().load(tempSquad.toArray(new Agent[]{}));
         int subscribersNum = info.getServices().getMoneypenny() + info.getServices().getM() +
-                info.getServices().getIntelligence().size() + 1; // + 1 for Q
+                info.getServices().getIntelligence().size();
         CountDownLatch latch = new CountDownLatch(subscribersNum);
         ExecutorService e = createServices(info, subscribersNum, latch);
         TimeService timeService = new TimeService(info.getServices().getTime(), latch);
