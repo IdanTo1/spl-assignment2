@@ -86,14 +86,18 @@ public class MessageBrokerImpl implements MessageBroker {
      * @post all subscribers subscribed to e.getClass() queue's last element will be e.
      */
     public <T> Future<T> sendEvent(Event<T> e) {
+        Future<T> f = new Future<>();
         Subscriber currentSub = null;
         Queue<Subscriber> q = _eventSubscribers.get(e.getClass());
+        if (q == null) {
+            f.resolve(null);
+            return f;
+        }
         synchronized (q) {
             currentSub = q.poll();
             if (currentSub == null) return null;
             q.add(currentSub);
         }
-        Future<T> f = new Future<>();
         try {
             synchronized (_subscriberQueues.get(currentSub)) {
                 /*
