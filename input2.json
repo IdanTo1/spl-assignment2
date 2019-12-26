@@ -1,0 +1,104 @@
+{
+    "inventory": ["0", "1","2","3","4","5","6","7"],
+    "services": {
+        "M": 5,
+        "Moneypenny": 2,
+        "intelligence": [
+            {
+                "missions": [
+                    {
+                        "serialAgentsNumbers": [
+                            "0",
+                            "1"
+                        ],
+                        "duration": 7,
+                        "gadget": "0",
+                        "name": "Pass0",
+                        "timeExpired": 15,
+                        "timeIssued": 3
+                    },
+                    {
+                        "serialAgentsNumbers": ["2"],
+                        "duration": 2,
+                        "gadget": "1",
+                        "name": "Pass1",
+                        "timeExpired": 25,
+                        "timeIssued": 25
+                    },
+                    {
+                        "serialAgentsNumbers": ["0"],
+                        "duration": 2,
+                        "gadget": "2",
+                        "name": "Pass2",
+                        "timeExpired": 100,
+                        "timeIssued": 15
+                    },
+                    {
+                        "serialAgentsNumbers": ["1"],
+                        "duration": 2,
+                        "gadget": "2",
+                        "name": "Fail harder than me",
+                        "timeExpired": 17,
+                        "timeIssued": 16
+                    }
+                ]
+            },
+            {
+                "missions": [
+                    {
+                        "serialAgentsNumbers": [
+                            "2",
+                            "1"
+                        ],
+                        "duration": 7,
+                        "gadget": "3",
+                        "name": "Fail",
+                        "timeExpired": 2,
+                        "timeIssued": 3
+                    }
+                ]
+            },
+            {
+                "missions": [
+                    {
+                        "serialAgentsNumbers": [
+                            "0",
+                            "2"
+                        ],
+                        "duration": 7,
+                        "gadget": "1",
+                        "name": "Pass3",
+                        "timeExpired": 53,
+                        "timeIssued": 50
+                    },
+                    {
+                        "serialAgentsNumbers": [
+                            "2",
+                            "1"
+                        ],
+                        "duration": 7,
+                        "gadget": "4",
+                        "name": "Pass4",
+                        "timeExpired": 100,
+                        "timeIssued": 20
+                    }
+                ]
+            }
+        ],
+        "time": 30
+    },
+    "squad": [
+        {
+            "name": "James Bond",
+            "serialNumber": "0"
+        },
+        {
+            "name": "Alec Trevelyan",
+            "serialNumber": "1"
+        },
+        {
+            "name": "Gut Fiery",
+            "serialNumber": "2"
+        }
+    ]
+}
