@@ -3,8 +3,8 @@ package bgu.spl.mics.application.passiveObjects;
 import java.util.List;
 
 /**
- * Passive data-object representing a delivery vehicle of the store.
- * You must not alter any of the given public methods of this class.
+ * Passive data-object representing a delivery vehicle of the store. You must not alter any of the given public methods
+ * of this class.
  * <p>
  * You may add ONLY private fields and methods to this class.
  */

@@ -14,6 +14,7 @@ public class TickBroadcast implements Broadcast {
 
     /**
      * Retrieves the current time of the simulation
+     *
      * @return the current time
      */
     public int getCurrTime() {

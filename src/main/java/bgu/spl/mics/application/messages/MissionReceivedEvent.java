@@ -15,6 +15,7 @@ public class MissionReceivedEvent implements Event<MissionInfo> {
 
     /**
      * Retrieves the mission to be executed information
+     *
      * @return mission information
      */
     public MissionInfo getMission() {

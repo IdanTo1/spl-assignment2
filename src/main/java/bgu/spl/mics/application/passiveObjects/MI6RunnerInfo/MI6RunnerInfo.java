@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.passiveObjects.MI6RunnerInfo;
 
-import bgu.spl.mics.application.passiveObjects.Agent;
 
 import java.util.List;
 

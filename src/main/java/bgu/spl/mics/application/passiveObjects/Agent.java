@@ -4,8 +4,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Passive data-object representing a information about an agent in MI6.
- * You must not alter any of the given public methods of this class.
+ * Passive data-object representing a information about an agent in MI6. You must not alter any of the given public
+ * methods of this class.
  * <p>
  * You may add ONLY private fields and methods to this class.
  */

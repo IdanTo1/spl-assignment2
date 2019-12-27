@@ -11,14 +11,16 @@ public class GadgetAvailableObject {
 
     /**
      * Retrieves the gadget to the mission
+     *
      * @return gadget string
      */
-    public String getGadget () {
+    public String getGadget() {
         return _gadget;
     }
 
     /**
      * Retrieves the information whether Q has the gadget in inventory or not.
+     *
      * @return true if gadget exists, false otherwise
      */
     public boolean isGadgetExists() {
@@ -34,6 +36,7 @@ public class GadgetAvailableObject {
 
     /**
      * Retrieves the time Q got the request
+     *
      * @return time in time-ticks.
      */
     public int getQtime() {
@@ -42,6 +45,7 @@ public class GadgetAvailableObject {
 
     /**
      * sets time Q got the request
+     *
      * @param Qtime time in time-ticks.
      */
     public void setQtime(int Qtime) {

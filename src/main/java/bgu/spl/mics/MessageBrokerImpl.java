@@ -1,9 +1,10 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.application.messages.MissionReceivedEvent;
-
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * The {@link MessageBrokerImpl class is the implementation of the MessageBroker interface. Write your implementation
@@ -105,12 +106,12 @@ public class MessageBrokerImpl implements MessageBroker {
                  * termination process. so there is no point of registering this event to other subscriber. (it is going to
                  * be deleted as well), so we'll just return empty future, without adding it to the eventsFutures map.
                  */
-				_subscriberQueues.get(currentSub).add(e);
-				_eventFutures.put(e, f);
+                _subscriberQueues.get(currentSub).add(e);
+                _eventFutures.put(e, f);
             }
             return f;
         } catch (NullPointerException ex) {
-        	f.resolve(null);
+            f.resolve(null);
             return f;
         }
     }
@@ -131,11 +132,11 @@ public class MessageBrokerImpl implements MessageBroker {
     public void unregister(Subscriber m) {
         if (_subscriberQueues.get(m) == null) return;
         /*
-        * Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
-        * because of Concurrency, order is very important here.
-        * first we'll unsubscribe the subscriber from all events and broadcasts.
-        * then we'll remove the Subscribers queue (so no one will have access to it.
-        * and only then we'll resolve all events in the queue.
+         * Resolve all event's futures assigned to m with null, to avoid infinite wait for these futures
+         * because of Concurrency, order is very important here.
+         * first we'll unsubscribe the subscriber from all events and broadcasts.
+         * then we'll remove the Subscribers queue (so no one will have access to it.
+         * and only then we'll resolve all events in the queue.
          */
         for (ConcurrentLinkedQueue<Subscriber> q : _eventSubscribers.values()) {
             synchronized (q) {
