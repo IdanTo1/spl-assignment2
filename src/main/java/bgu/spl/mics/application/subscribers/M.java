@@ -32,7 +32,7 @@ public class M extends Subscriber {
     @Override
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast b) -> _currTime = b.getCurrTime());
-        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
+        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b) -> terminate());
         subscribeEvent(MissionReceivedEvent.class, (MissionReceivedEvent e) -> {
             diary.incrementTotal();
             // get all mission details
@@ -86,7 +86,7 @@ public class M extends Subscriber {
 
             // generate the mission report with all the allocated data.
             Report report = createReport(missionName, timeIssued, MoneypennySerial, agentsSerials,
-                    agentNames, Qtime, gadget);
+                                         agentNames, Qtime, gadget);
             diary.addReport(report);
             complete(e, info);
         });
@@ -104,6 +104,7 @@ public class M extends Subscriber {
      * @param agentsNames      the names of the agents sent to the mission
      * @param Qtime            the time-tick in which Q Received the GadgetAvailableEvent for that mission
      * @param gadget           the gadget which was used in the mission
+     *
      * @return a detailed report of the mission
      */
     public Report createReport(String missionName, int timeIssued, int MoneypennySerial, List<String> agentsSerials, List<String> agentsNames,
@@ -120,13 +121,14 @@ public class M extends Subscriber {
         report.setQTime(Qtime);
         return report;
     }
+
     private AgentsAvailableObject acquireAgents(MissionInfo info, List<String> agentsSerials) {
         AgentsAvailableObject agentsAvailableObject = new AgentsAvailableObject(agentsSerials, info.getDuration());
         Future<AgentsAvailableObject> agentsAvailableFuture;
         agentsAvailableFuture = this.getSimplePublisher().sendEvent(new AgentsAvailableEvent(agentsAvailableObject));
         // check whether Moneypenny acquired the agents, and allocate all relevant details. timeout is needed for the
         // case where all Moneypennys already terminated, and M is in the middle of processing a mission.
-        if(agentsAvailableFuture == null) return null;
+        if (agentsAvailableFuture == null) return null;
         agentsAvailableObject = agentsAvailableFuture.get(); // M and Moneypenny uses the same agentsObject
         return agentsAvailableObject;
     }
@@ -136,7 +138,7 @@ public class M extends Subscriber {
         Future<GadgetAvailableObject> gadgetAvailableFuture;
         gadgetAvailableFuture = this.getSimplePublisher().sendEvent(new GadgetAvailableEvent(gadgetAvailableObject));
         // check whether Q acquired the gadget, and allocate all relevant details.
-        if(gadgetAvailableFuture == null) return null;
+        if (gadgetAvailableFuture == null) return null;
         gadgetAvailableObject = gadgetAvailableFuture.get(); //M and Q uses the same gadgetObject
         return gadgetAvailableObject;
     }

@@ -37,6 +37,7 @@ public class AgentsAvailableObject {
 
     /**
      * sets the names of the agents, Moneypenny acquired for M
+     *
      * @param agentsNames agents' names
      */
     public void setAgentsNames(List<String> agentsNames) {
@@ -54,6 +55,7 @@ public class AgentsAvailableObject {
 
     /**
      * Retrieves the unique serial number of Moneypenny who acquired the agents
+     *
      * @return Moneypenny's serial
      */
     public int getMoneypennySerial() {
@@ -62,6 +64,7 @@ public class AgentsAvailableObject {
 
     /**
      * sets the serial number of the Moneypenny who acquired the agents.
+     *
      * @param MoneypennySerial Moneypenny's serial
      */
     public void setMoneypennySerial(int MoneypennySerial) {

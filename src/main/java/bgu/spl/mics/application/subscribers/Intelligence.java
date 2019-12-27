@@ -12,11 +12,10 @@ import java.util.PriorityQueue;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * A Publisher only.
- * Holds a list of Info objects and sends them
+ * A Publisher only. Holds a list of Info objects and sends them
  * <p>
- * You can add private fields and public methods to this class.
- * You MAY change constructor signatures and even add new public constructors.
+ * You can add private fields and public methods to this class. You MAY change constructor signatures and even add new
+ * public constructors.
  */
 public class Intelligence extends Subscriber {
     private int _serial;
@@ -38,7 +37,7 @@ public class Intelligence extends Subscriber {
             while (_missions.peek() != null && currTime == _missions.peek().getTimeIssued())
                 getSimplePublisher().sendEvent(new MissionReceivedEvent(_missions.poll()));
         });
-        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b)->terminate());
+        subscribeBroadcast(TerminationTickBroadcast.class, (TerminationTickBroadcast b) -> terminate());
         _signalInitialized.countDown();
     }
 

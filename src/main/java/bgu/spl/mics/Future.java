@@ -1,8 +1,6 @@
 package bgu.spl.mics;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A Future object represents a promised result - an object that will eventually be resolved to hold a result of some
@@ -32,6 +30,7 @@ public class Future<T> {
      * <p>
      *
      * @return return the result of type T if it is available, if not wait until it is available.
+     *
      * @post (isDone = = true)
      */
     public synchronized T get() {
@@ -58,6 +57,7 @@ public class Future<T> {
 
     /**
      * @return true if this object has been resolved, false otherwise
+     *
      * @pre none
      * @post none
      */
@@ -72,8 +72,10 @@ public class Future<T> {
      *
      * @param timeout the maximal amount of time units to wait for the result.
      * @param unit    the {@link TimeUnit} time units to wait.
+     *
      * @return return the result of type T if it is available, if not, wait for {@code timeout} TimeUnits {@code unit}.
      * If time has elapsed, return null.
+     *
      * @post (isDone () == true || current_time >= start_time + timeout
      */
     public synchronized T get(long timeout, TimeUnit unit) {

@@ -37,6 +37,7 @@ public class Squad {
      * <p>
      *
      * @param agents Data structure containing all data necessary for initialization of the squad.
+     *
      * @pre none
      * @post (for agent : agents { getAgents ( agent.getSerialNumber) == true})
      */
@@ -68,6 +69,7 @@ public class Squad {
      * simulates executing a mission by calling sleep.
      *
      * @param time milliseconds to sleep
+     *
      * @pre (for serial : serials { getAgents ( [serial]).state == BLOCKED})
      * @post (current_time > = start_time + time & & getAgents ( serials) == true)
      */
@@ -84,7 +86,9 @@ public class Squad {
      * acquires an agent, i.e. holds the agent until the caller is done with it
      *
      * @param serials the serial numbers of the agents
+     *
      * @return ‘false’ if an agent of serialNumber ‘serial’ is missing, and ‘true’ otherwise
+     *
      * @pre none
      * @post (for serial : serials { getAgents ( [serial]).state == BLOCKED})
      */
@@ -113,7 +117,9 @@ public class Squad {
      * gets the agents names
      *
      * @param serials the serial numbers of the agents
+     *
      * @return a list of the names of the agents with the specified serials.
+     *
      * @pre none
      * @post none
      */
