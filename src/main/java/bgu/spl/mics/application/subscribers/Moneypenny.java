@@ -41,7 +41,10 @@ public class Moneypenny extends Subscriber {
             try {
                 if (squad.getAgents(agentsSerials)) {
                     result.setAgentsNames(squad.getAgentsNames(agentsSerials));
-                } else return; // if agents don't exists. mission will never be executed, so no reason to wait.
+                } else { // if agents don't exists. mission will never be executed, so no reason to wait.
+                    complete(e,null);
+                    return;
+                }
             } catch (InterruptedException ex) {
                 complete(e, null);
                 squad.releaseAgents(agentsSerials);
